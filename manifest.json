@@ -1,0 +1,17 @@
+{
+  "name": "Panini FIFA World Cup 2026",
+  "short_name": "Panini 2026",
+  "description": "Gestor de coleção de cromos Panini FIFA World Cup 2026",
+  "start_url": "/panini-2026/",
+  "display": "standalone",
+  "background_color": "#0b0e18",
+  "theme_color": "#0b0e18",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>⚽</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

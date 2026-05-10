@@ -2,952 +2,939 @@
 <html lang="pt">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Panini 2026">
-<meta name="theme-color" content="#1a0a2e">
+<meta name="theme-color" content="#0b0e18">
+<link rel="manifest" href="manifest.json">
 <title>Panini FIFA World Cup 2026™</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --gold: #D4AF37;
-  --gold2: #FFD700;
-  --bg: #0a0a1a;
-  --bg2: #111128;
-  --bg3: #1a1a38;
-  --green: #00e676;
-  --red: #ff4466;
-  --purple: #8866ff;
-  --text: #f0f0f0;
-  --text2: rgba(240,240,240,0.55);
+  --bg:     #0b0e18;
+  --bg2:    #121729;
+  --bg3:    #1a2035;
+  --card:   #151b2e;
+  --gold:   #d4a843;
+  --gold2:  #f0c95a;
+  --green:  #34d399;
+  --red:    #f43f5e;
+  --blue:   #60a5fa;
+  --orange: #fb923c;
+  --text:   #e8e8f0;
+  --text2:  #8891a8;
+  --border: rgba(255,255,255,0.06);
+  --radius: 12px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overflow: hidden; }
-body {
-  font-family: 'Barlow', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  display: flex; flex-direction: column;
-}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif}
+body{display:flex;flex-direction:column;max-width:520px;margin:0 auto;position:relative}
+h1,h2,h3,.stat-num,.nav-label,.team-count,.section-title{font-family:'Oswald',sans-serif}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:#333;border-radius:4px}
+input::placeholder{color:#555}
+button{cursor:pointer;border:none;background:none;color:inherit;font-family:inherit}
+button:active{transform:scale(0.96)}
 
 /* ── SCREENS ── */
-.screen { display: none; flex-direction: column; height: 100vh; overflow: hidden; }
-.screen.active { display: flex; }
+.screen{display:none;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+.screen.active{display:flex}
+.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:72px}
 
 /* ── SPLASH ── */
-#screen-splash {
-  background: linear-gradient(160deg, #0a0a1a 0%, #1a0a2e 50%, #0d1a2e 100%);
-  align-items: center; justify-content: center; gap: 20px;
-}
-.splash-ball { font-size: 72px; animation: bounce 1.2s ease-in-out infinite; }
-@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
-.splash-title { font-family:'Barlow Condensed',sans-serif; font-size: 28px; font-weight: 900; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; text-align: center; }
-.splash-sub { font-size: 12px; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; }
-.splash-loading { display: flex; gap: 6px; }
-.splash-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: pulse 1s ease-in-out infinite; }
-.splash-dot:nth-child(2) { animation-delay: 0.2s; }
-.splash-dot:nth-child(3) { animation-delay: 0.4s; }
-@keyframes pulse { 0%,100%{opacity:0.3;transform:scale(0.8)} 50%{opacity:1;transform:scale(1.2)} }
+#splash{align-items:center;justify-content:center;gap:16px;background:radial-gradient(ellipse at 50% 30%,#1a2040,#0b0e18)}
+.splash-icon{font-size:64px;animation:float 2s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.splash-title{font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;color:var(--gold);letter-spacing:4px;text-transform:uppercase}
+.splash-dots{display:flex;gap:6px;margin-top:8px}
+.splash-dots span{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:blink 1s ease-in-out infinite}
+.splash-dots span:nth-child(2){animation-delay:.2s}
+.splash-dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
 
-/* ── HOME ── */
-#screen-home { background: var(--bg); }
-.home-header {
-  background: linear-gradient(135deg, #1a0a2e, #0a1a2e);
-  padding: 20px 20px 16px;
-  border-bottom: 2px solid var(--gold);
-}
-.home-header h1 { font-family:'Barlow Condensed',sans-serif; font-size: 22px; font-weight: 900; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; }
-.home-header p { font-size: 12px; color: var(--text2); margin-top: 2px; }
-.home-body { flex: 1; overflow-y: auto; padding: 16px; }
-.colecoes-list { display: flex; flex-direction: column; gap: 10px; }
-.colecao-card {
-  background: linear-gradient(135deg, var(--bg2), var(--bg3));
-  border: 1px solid rgba(212,175,55,0.25);
-  border-radius: 14px; padding: 14px 16px;
-  cursor: pointer; transition: all 0.2s;
-  display: flex; align-items: center; gap: 12px;
-}
-.colecao-card:active { transform: scale(0.98); border-color: var(--gold); }
-.colecao-avatar {
-  width: 46px; height: 46px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--gold), var(--gold2));
-  display: flex; align-items: center; justify-content: center;
-  font-family:'Barlow Condensed',sans-serif; font-size: 20px; font-weight: 900; color: var(--bg);
-  flex-shrink: 0;
-}
-.colecao-info { flex: 1; }
-.colecao-nome { font-family:'Barlow Condensed',sans-serif; font-size: 18px; font-weight: 700; }
-.colecao-stats { font-size: 12px; color: var(--text2); margin-top: 2px; }
-.colecao-pct {
-  font-family:'Barlow Condensed',sans-serif; font-size: 22px; font-weight: 900; color: var(--gold);
-}
-.pct-bar-wrap { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 6px; }
-.pct-bar { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--gold), var(--gold2)); transition: width 0.5s; }
-.btn-nova-colecao {
-  margin-top: 16px; width: 100%; padding: 14px;
-  background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
-  border: 2px dashed rgba(212,175,55,0.4);
-  border-radius: 14px; color: var(--gold);
-  font-family:'Barlow Condensed',sans-serif; font-size: 16px; font-weight: 700;
-  letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
-}
-.btn-nova-colecao:active { background: rgba(212,175,55,0.2); }
-.empty-home { text-align: center; padding: 60px 20px; color: var(--text2); }
-.empty-home .emoji { font-size: 48px; margin-bottom: 12px; }
-.empty-home p { font-size: 14px; line-height: 1.6; }
+/* ── COLLECTIONS SCREEN ── */
+.coll-header{padding:20px 16px;text-align:center;border-bottom:1px solid var(--border)}
+.coll-header h1{font-size:20px;font-weight:700;color:var(--gold);letter-spacing:3px;text-transform:uppercase}
+.coll-header p{font-size:11px;color:var(--text2);margin-top:4px;letter-spacing:1px}
+.coll-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;align-items:center;gap:12px;margin:6px 14px}
+.coll-card:first-of-type{margin-top:14px}
+.coll-avatar{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#1e2a45,#162035);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.coll-info{flex:1;min-width:0}
+.coll-name{font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;color:var(--text)}
+.coll-stats{font-size:11px;color:var(--text2);margin-top:2px}
+.coll-progress{height:4px;background:#1a2035;border-radius:2px;margin-top:6px;overflow:hidden}
+.coll-progress-bar{height:100%;border-radius:2px;background:var(--gold);transition:width .4s}
+.coll-arrow{color:#444;font-size:16px}
+.btn-new-coll{margin:16px;padding:14px;border-radius:var(--radius);background:linear-gradient(135deg,var(--gold),#c49530);color:#000;font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center}
 
 /* ── MODAL ── */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-  display: none; align-items: flex-end; justify-content: center;
-  z-index: 1000; backdrop-filter: blur(4px);
-}
-.modal-overlay.open { display: flex; }
-.modal {
-  background: linear-gradient(160deg, #1a1a38, #111128);
-  border: 1px solid rgba(212,175,55,0.3);
-  border-radius: 24px 24px 0 0;
-  padding: 24px 20px 40px;
-  width: 100%; max-width: 480px;
-  animation: slideUp 0.3s ease;
-}
-@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
-.modal h2 { font-family:'Barlow Condensed',sans-serif; font-size: 22px; font-weight: 900; color: var(--gold); margin-bottom: 20px; }
-.modal-input {
-  width: 100%; padding: 13px 16px; margin-bottom: 12px;
-  background: var(--bg); border: 1px solid rgba(212,175,55,0.3);
-  border-radius: 10px; color: var(--text); font-size: 16px; outline: none;
-  font-family: 'Barlow', sans-serif;
-}
-.modal-input:focus { border-color: var(--gold); }
-.pin-display {
-  display: flex; gap: 10px; justify-content: center; margin: 16px 0;
-}
-.pin-dot {
-  width: 18px; height: 18px; border-radius: 50%;
-  border: 2px solid rgba(212,175,55,0.4);
-  transition: all 0.2s;
-}
-.pin-dot.filled { background: var(--gold); border-color: var(--gold); }
-.pin-pad {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0;
-}
-.pin-key {
-  padding: 16px; background: var(--bg3); border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px; color: var(--text); font-size: 22px; font-weight: 700;
-  cursor: pointer; text-align: center; transition: all 0.15s;
-  font-family: 'Barlow Condensed', sans-serif;
-}
-.pin-key:active { background: rgba(212,175,55,0.2); transform: scale(0.95); }
-.pin-key.del { font-size: 18px; color: var(--text2); }
-.modal-btn {
-  width: 100%; padding: 14px; border-radius: 12px; border: none;
-  font-family:'Barlow Condensed',sans-serif; font-size: 17px; font-weight: 700;
-  letter-spacing: 1px; cursor: pointer; margin-top: 8px; transition: all 0.2s;
-}
-.modal-btn.primary { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: var(--bg); }
-.modal-btn.secondary { background: rgba(255,255,255,0.06); color: var(--text2); border: 1px solid rgba(255,255,255,0.1); }
-.modal-btn:active { transform: scale(0.98); }
-.modal-error { color: var(--red); font-size: 13px; text-align: center; margin-top: 8px; min-height: 18px; }
-.modal-label { font-size: 12px; color: var(--text2); margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.active{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;width:100%;max-width:340px}
+.modal h3{font-size:18px;font-weight:600;color:var(--gold);margin-bottom:16px;text-align:center}
+.modal-input{width:100%;padding:12px;background:var(--bg);border:1px solid #333;border-radius:8px;color:var(--text);font-size:15px;margin-bottom:12px;text-align:center;outline:none}
+.modal-input:focus{border-color:var(--gold)}
+.pin-dots{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
+.pin-dot{width:36px;height:42px;border-radius:8px;background:var(--bg);border:2px solid #333;font-family:'Oswald',sans-serif;font-size:20px;font-weight:600;color:var(--gold);text-align:center;outline:none}
+.pin-dot:focus{border-color:var(--gold)}
+.modal-btn{width:100%;padding:12px;border-radius:8px;font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:8px}
+.modal-btn.primary{background:var(--gold);color:#000}
+.modal-btn.secondary{background:#1a2035;color:var(--text2)}
+.modal-btn.danger{background:#3a1520;color:var(--red)}
 
-/* ── COLECAO VIEW ── */
-#screen-colecao { background: var(--bg); }
-.col-header {
-  background: linear-gradient(135deg, #1a0a2e, #0a1a2e);
-  padding: 12px 16px 10px;
-  border-bottom: 2px solid var(--gold);
-}
-.col-header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-.btn-back {
-  background: none; border: none; color: var(--gold); font-size: 22px; cursor: pointer; padding: 2px 6px;
-}
-.col-header-title { font-family:'Barlow Condensed',sans-serif; font-size: 20px; font-weight: 900; color: var(--gold); flex: 1; }
-.btn-edit-col {
-  background: rgba(212,175,55,0.15); border: 1px solid rgba(212,175,55,0.3);
-  border-radius: 8px; color: var(--gold); font-size: 12px; font-weight: 700;
-  padding: 5px 10px; cursor: pointer;
-}
-.col-progress-bar { height: 5px; background: rgba(255,255,255,0.1); border-radius: 3px; }
-.col-progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--green), #00b348); transition: width 0.4s; }
+/* ── MAIN APP HEADER ── */
+.app-header{padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);background:var(--bg)}
+.app-header .back-btn{font-size:18px;color:var(--gold);padding:4px}
+.app-header h2{font-family:'Oswald',sans-serif;font-size:16px;font-weight:600;flex:1}
+.app-header .edit-btn{font-size:13px;color:var(--text2);padding:4px 8px}
 
-/* NAV TABS */
-.col-nav { display: flex; background: var(--bg2); border-bottom: 1px solid rgba(212,175,55,0.2); }
-.col-nav-btn {
-  flex: 1; padding: 10px 4px; background: none; border: none;
-  color: var(--text2); font-size: clamp(9px, 2.3vw, 12px); font-weight: 700;
-  cursor: pointer; letter-spacing: 0.3px; transition: all 0.2s;
-  white-space: nowrap; border-bottom: 2px solid transparent;
-}
-.col-nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+/* ── STATS BAR ── */
+.stats-bar{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px;gap:6px}
+.stat-item{flex:1;text-align:center}
+.stat-num{font-size:22px;font-weight:700}
+.stat-num.owned{color:var(--green)}
+.stat-num.missing{color:var(--red)}
+.stat-num.dupes{color:var(--orange)}
+.stat-label{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.stats-progress{padding:0 16px 12px;background:var(--bg2)}
+.progress-track{height:5px;background:var(--bg);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .5s}
+.pct-label{text-align:right;font-family:'Oswald',sans-serif;font-size:11px;color:var(--gold);margin-top:4px}
 
-/* CONTROLS */
-.col-controls { padding: 8px 12px; background: var(--bg); display: flex; gap: 7px; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.col-search { flex: 1 1 150px; padding: 8px 12px; background: var(--bg3); border: 1px solid rgba(212,175,55,0.3); border-radius: 8px; color: var(--text); font-size: 14px; outline: none; }
-.col-select { flex: 1 1 120px; padding: 8px; background: var(--bg3); border: 1px solid rgba(212,175,55,0.3); border-radius: 8px; color: var(--text); font-size: 12px; outline: none; }
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;height:60px;background:var(--bg);border-top:1px solid var(--border);display:flex;z-index:50}
+.nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#444;transition:color .15s}
+.nav-tab.active{color:var(--gold)}
+.nav-tab .nav-icon{font-size:18px}
+.nav-label{font-size:8px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
 
-/* LIST */
-.col-status { padding: 4px 14px; font-size: 11px; color: var(--text2); background: var(--bg); }
-.col-list { flex: 1; overflow-y: auto; padding: 6px 10px 80px; }
-.sticker-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 7px 9px; margin-bottom: 3px; border-radius: 8px;
-  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-  transition: all 0.15s;
-}
-.sticker-row.owned { background: rgba(0,230,118,0.07); border-color: rgba(0,230,118,0.18); }
-.sticker-row.readonly { pointer-events: none; }
-.s-id { min-width: 50px; padding: 2px 5px; border-radius: 4px; font-family:'Barlow Condensed',sans-serif; font-size: 11px; font-weight: 800; text-align: center; background: var(--bg3); color: var(--text); }
-.s-id.owned { background: var(--green); color: var(--bg); }
-.s-id.special { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: var(--bg); }
-.s-name { flex: 1; font-size: clamp(11px, 2.8vw, 13px); line-height: 1.3; cursor: pointer; }
-.s-dup { margin-left: 5px; background: var(--purple); border-radius: 10px; padding: 1px 6px; font-size: 10px; font-weight: 700; color: #fff; }
-.s-controls { display: flex; align-items: center; gap: 3px; }
-.s-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(212,175,55,0.4); background: rgba(212,175,55,0.08); color: var(--gold); cursor: pointer; font-size: 18px; line-height: 26px; text-align: center; font-weight: 700; padding: 0; }
-.s-count { min-width: 22px; text-align: center; font-weight: 700; font-size: 14px; color: var(--gold); }
-.empty-list { text-align: center; padding: 40px 16px; color: var(--text2); font-size: 14px; }
+/* ── TEAM LIST ── */
+.team-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);transition:background .1s}
+.team-row:active{background:var(--bg3)}
+.team-flag{font-size:22px;width:32px;text-align:center}
+.team-info{flex:1;min-width:0}
+.team-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team-prog{height:3px;background:var(--bg);border-radius:2px;margin-top:4px;overflow:hidden}
+.team-prog-bar{height:100%;border-radius:2px;background:var(--gold);transition:width .3s}
+.team-count{font-size:12px;font-weight:600;color:var(--text2);white-space:nowrap}
+.team-complete .team-name{color:var(--green)}
+.team-complete .team-prog-bar{background:var(--green)}
+.team-complete .team-count{color:var(--green)}
 
-/* STATS */
-.stats-wrap { flex: 1; overflow-y: auto; padding: 12px; }
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-.stat-card { border-radius: 12px; padding: 14px; text-align: center; }
-.stat-num { font-family:'Barlow Condensed',sans-serif; font-size: clamp(30px,8vw,44px); font-weight: 900; line-height: 1; }
-.stat-lbl { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
-.big-prog-bar { height: 10px; background: rgba(255,255,255,0.08); border-radius: 5px; overflow: hidden; margin-bottom: 6px; }
-.big-prog-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold2)); border-radius: 5px; transition: width 0.5s; }
-.section-title { font-family:'Barlow Condensed',sans-serif; font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin: 14px 0 8px; }
-.team-prog-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.team-prog-lbl { width: 115px; font-size: 11px; text-align: right; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.team-prog-bar { flex: 1; height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
-.team-prog-fill { height: 100%; border-radius: 4px; transition: width 0.4s; }
-.team-prog-ct { font-size: 10px; min-width: 34px; text-align: right; color: var(--text2); }
+/* ── STICKER LIST ── */
+.sticker-row{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--border)}
+.sticker-check{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all .15s}
+.sticker-check.off{background:#1a2035;color:transparent}
+.sticker-check.on{background:var(--green);color:#fff}
+.sticker-id{font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;letter-spacing:.5px;min-width:48px}
+.sticker-id.foil{color:var(--gold)}
+.sticker-id.normal{color:#6670a0}
+.foil-badge{font-size:8px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;padding:1px 4px;border-radius:3px;font-weight:700;letter-spacing:.5px;margin-left:4px}
+.sticker-name{flex:1;font-size:12px;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sticker-name.owned{color:#ccc}
+.sticker-team-flag{font-size:12px}
+.qty-controls{display:flex;align-items:center;gap:3px;flex-shrink:0}
+.qty-btn{width:24px;height:24px;border-radius:6px;font-size:14px;display:flex;align-items:center;justify-content:center}
+.qty-btn.minus{background:#2a1520;color:var(--red)}
+.qty-btn.plus{background:#152030;color:var(--blue)}
+.qty-num{font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;min-width:18px;text-align:center}
+.qty-num.dupe{color:var(--orange)}
+.qty-num.single{color:#888}
 
-/* TROCAS */
-.trocas-wrap { flex: 1; overflow-y: auto; padding: 12px; }
-.troca-section { margin-bottom: 20px; }
-.troca-header { font-family:'Barlow Condensed',sans-serif; font-size: 14px; font-weight: 700; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid rgba(212,175,55,0.2); }
-.match-card {
-  background: linear-gradient(135deg, rgba(0,230,118,0.08), rgba(0,230,118,0.03));
-  border: 1px solid rgba(0,230,118,0.25); border-radius: 10px;
-  padding: 10px 12px; margin-bottom: 6px;
-}
-.match-card .match-title { font-size: 12px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
-.match-card .match-detail { font-size: 11px; color: var(--text2); line-height: 1.5; }
-.offer-card {
-  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 10px; padding: 10px 12px; margin-bottom: 6px;
-}
-.offer-who { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-.offer-stickers { font-size: 11px; color: var(--text2); line-height: 1.6; }
-.offer-tag { display: inline-block; background: var(--bg3); border: 1px solid rgba(212,175,55,0.3); border-radius: 4px; padding: 1px 5px; margin: 1px; font-size: 10px; color: var(--gold); font-family:'Barlow Condensed',sans-serif; font-weight: 700; }
-.no-trocas { text-align: center; padding: 30px 16px; color: var(--text2); font-size: 13px; }
+/* ── SEARCH ── */
+.search-bar{padding:12px 14px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.search-input{width:100%;padding:10px 12px;background:var(--bg);border:1px solid #2a2a40;border-radius:8px;color:var(--text);font-size:14px;outline:none}
+.search-input:focus{border-color:var(--gold)}
 
-/* TOAST */
-.toast {
-  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: #1a3a1a; border: 1px solid var(--green); color: var(--green);
-  padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 700;
-  opacity: 0; transition: all 0.3s; z-index: 2000; white-space: nowrap;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.toast.error { background: #3a1a1a; border-color: var(--red); color: var(--red); }
+/* ── TRADES ── */
+.trade-section{padding:14px}
+.trade-section h3{font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.trade-match{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px}
+.trade-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.trade-user{font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;color:var(--gold)}
+.trade-badge{font-size:10px;background:#1a2a1a;color:var(--green);padding:2px 8px;border-radius:4px;font-weight:600}
+.trade-row{display:flex;gap:6px;flex-wrap:wrap}
+.trade-chip{font-size:11px;background:var(--bg);padding:3px 8px;border-radius:4px;color:var(--text2)}
+.trade-chip.give{border-left:2px solid var(--red)}
+.trade-chip.get{border-left:2px solid var(--green)}
+.trade-divider{text-align:center;color:#444;font-size:11px;padding:4px 0}
 
-/* LOADING */
-.loading-overlay {
-  position: fixed; inset: 0; background: rgba(10,10,26,0.85);
-  display: none; align-items: center; justify-content: center; z-index: 3000;
-  flex-direction: column; gap: 12px;
-}
-.loading-overlay.show { display: flex; }
-.loading-spinner { width: 36px; height: 36px; border: 3px solid rgba(212,175,55,0.2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text { font-size: 13px; color: var(--text2); }
+/* ── SECTION HEADERS ── */
+.section-header{padding:10px 14px;background:var(--bg3);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.section-title{font-size:12px;font-weight:600;color:var(--text2);letter-spacing:2px;text-transform:uppercase}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:48px 20px;color:#555}
+.empty-state .icon{font-size:40px;margin-bottom:12px}
+.empty-state p{font-size:13px}
+
+/* ── PAGE GROUPS ── */
+.page-group{margin-bottom:2px}
+.page-header{padding:6px 14px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.page-title{font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;color:var(--text2);letter-spacing:1.5px;text-transform:uppercase}
+.page-count{font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;color:var(--text2)}
 </style>
 </head>
 <body>
 
-<!-- LOADING -->
-<div class="loading-overlay" id="loading">
-  <div class="loading-spinner"></div>
-  <div class="loading-text" id="loading-text">A carregar...</div>
+<!-- ══════ SPLASH ══════ -->
+<div id="splash" class="screen active">
+  <div class="splash-icon">⚽</div>
+  <div class="splash-title">World Cup 2026</div>
+  <div class="splash-dots"><span></span><span></span><span></span></div>
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+<!-- ══════ COLLECTIONS LIST ══════ -->
+<div id="screen-collections" class="screen">
+  <div class="coll-header">
+    <div style="font-size:32px;margin-bottom:6px">⚽</div>
+    <h1>Panini World Cup 2026</h1>
+    <p>Coleções</p>
+  </div>
+  <div class="scroll-area" id="coll-list"></div>
+  <button class="btn-new-coll" onclick="showNewCollModal()">+ Nova Coleção</button>
+</div>
 
-<!-- SPLASH -->
-<div class="screen active" id="screen-splash">
-  <div class="splash-ball">⚽</div>
-  <div class="splash-title">Panini FIFA<br>World Cup 2026™</div>
-  <div class="splash-sub">Gestor de Cromos</div>
-  <div class="splash-loading">
-    <div class="splash-dot"></div>
-    <div class="splash-dot"></div>
-    <div class="splash-dot"></div>
+<!-- ══════ MAIN APP (inside a collection) ══════ -->
+<div id="screen-app" class="screen">
+  <!-- Header -->
+  <div class="app-header">
+    <button class="back-btn" onclick="goToCollections()">←</button>
+    <h2 id="app-title">Coleção</h2>
+    <button class="edit-btn" onclick="showEditCollModal()">⚙</button>
+  </div>
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-num owned" id="stat-owned">0</div><div class="stat-label">Tenho</div></div>
+    <div class="stat-item"><div class="stat-num missing" id="stat-missing">0</div><div class="stat-label">Faltam</div></div>
+    <div class="stat-item"><div class="stat-num dupes" id="stat-dupes">0</div><div class="stat-label">Repetidos</div></div>
+  </div>
+  <div class="stats-progress">
+    <div class="progress-track"><div class="progress-fill" id="stat-progress"></div></div>
+    <div class="pct-label" id="stat-pct">0%</div>
+  </div>
+  <!-- Tab content -->
+  <div class="scroll-area" id="app-content"></div>
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <button class="nav-tab active" data-tab="teams" onclick="switchTab('teams')">
+      <span class="nav-icon">🏠</span><span class="nav-label">Equipas</span>
+    </button>
+    <button class="nav-tab" data-tab="missing" onclick="switchTab('missing')">
+      <span class="nav-icon">❌</span><span class="nav-label">Faltam</span>
+    </button>
+    <button class="nav-tab" data-tab="dupes" onclick="switchTab('dupes')">
+      <span class="nav-icon">🔄</span><span class="nav-label">Repetidos</span>
+    </button>
+    <button class="nav-tab" data-tab="trades" onclick="switchTab('trades')">
+      <span class="nav-icon">🤝</span><span class="nav-label">Trocas</span>
+    </button>
+    <button class="nav-tab" data-tab="search" onclick="switchTab('search')">
+      <span class="nav-icon">🔍</span><span class="nav-label">Procurar</span>
+    </button>
   </div>
 </div>
 
-<!-- HOME -->
-<div class="screen" id="screen-home">
-  <div class="home-header">
-    <h1>⭐ Panini 2026™</h1>
-    <p>Escolhe ou cria a tua coleção</p>
+<!-- ══════ TEAM DETAIL ══════ -->
+<div id="screen-team" class="screen">
+  <div class="app-header">
+    <button class="back-btn" onclick="goBackFromTeam()">←</button>
+    <span id="team-flag" style="font-size:24px"></span>
+    <h2 id="team-title" style="flex:1"></h2>
+    <span id="team-detail-count" class="team-count"></span>
   </div>
-  <div class="home-body">
-    <div class="colecoes-list" id="colecoes-list">
-      <div class="empty-home">
-        <div class="emoji">📦</div>
-        <p>Ainda não há coleções.<br>Cria a primeira!</p>
-      </div>
-    </div>
-    <button class="btn-nova-colecao" onclick="abrirModalNova()">＋ Nova Coleção</button>
+  <div class="scroll-area" id="team-stickers"></div>
+  <div class="bottom-nav">
+    <button class="nav-tab active" data-tab="teams" onclick="switchTab('teams')">
+      <span class="nav-icon">🏠</span><span class="nav-label">Equipas</span>
+    </button>
+    <button class="nav-tab" data-tab="missing" onclick="switchTab('missing')">
+      <span class="nav-icon">❌</span><span class="nav-label">Faltam</span>
+    </button>
+    <button class="nav-tab" data-tab="dupes" onclick="switchTab('dupes')">
+      <span class="nav-icon">🔄</span><span class="nav-label">Repetidos</span>
+    </button>
+    <button class="nav-tab" data-tab="trades" onclick="switchTab('trades')">
+      <span class="nav-icon">🤝</span><span class="nav-label">Trocas</span>
+    </button>
+    <button class="nav-tab" data-tab="search" onclick="switchTab('search')">
+      <span class="nav-icon">🔍</span><span class="nav-label">Procurar</span>
+    </button>
   </div>
 </div>
 
-<!-- MODAL NOVA COLEÇÃO -->
-<div class="modal-overlay" id="modal-nova">
+<!-- ══════ MODALS ══════ -->
+<div id="modal-new-coll" class="modal-overlay">
   <div class="modal">
-    <h2>Nova Coleção</h2>
-    <div class="modal-label">Nome</div>
-    <input class="modal-input" id="nova-nome" type="text" placeholder="Ex: Santiago" maxlength="20" autocomplete="off">
-    <div class="modal-label" style="margin-top:12px">PIN de 4 dígitos</div>
-    <div class="pin-display" id="nova-pin-display">
-      <div class="pin-dot" id="ndot0"></div>
-      <div class="pin-dot" id="ndot1"></div>
-      <div class="pin-dot" id="ndot2"></div>
-      <div class="pin-dot" id="ndot3"></div>
+    <h3>Nova Coleção</h3>
+    <input class="modal-input" id="new-coll-name" placeholder="Nome (ex: Santiago)" maxlength="30">
+    <p style="font-size:11px;color:var(--text2);text-align:center;margin-bottom:8px">PIN de 4 dígitos para editar</p>
+    <div class="pin-dots">
+      <input class="pin-dot" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-dot" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-dot" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-dot" maxlength="1" inputmode="numeric" pattern="[0-9]">
     </div>
-    <div class="pin-pad">
-      <button class="pin-key" onclick="pinKey('nova',1)">1</button>
-      <button class="pin-key" onclick="pinKey('nova',2)">2</button>
-      <button class="pin-key" onclick="pinKey('nova',3)">3</button>
-      <button class="pin-key" onclick="pinKey('nova',4)">4</button>
-      <button class="pin-key" onclick="pinKey('nova',5)">5</button>
-      <button class="pin-key" onclick="pinKey('nova',6)">6</button>
-      <button class="pin-key" onclick="pinKey('nova',7)">7</button>
-      <button class="pin-key" onclick="pinKey('nova',8)">8</button>
-      <button class="pin-key" onclick="pinKey('nova',9)">9</button>
-      <button class="pin-key del" onclick="pinKey('nova','del')">⌫</button>
-      <button class="pin-key" onclick="pinKey('nova',0)">0</button>
-      <button class="pin-key del" onclick="pinKey('nova','clr')">✕</button>
-    </div>
-    <div class="modal-error" id="nova-error"></div>
-    <button class="modal-btn primary" onclick="criarColecao()">Criar Coleção</button>
-    <button class="modal-btn secondary" onclick="fecharModal('modal-nova')">Cancelar</button>
+    <button class="modal-btn primary" onclick="createCollection()">Criar</button>
+    <button class="modal-btn secondary" onclick="closeModals()">Cancelar</button>
   </div>
 </div>
 
-<!-- MODAL PIN (entrar/editar) -->
-<div class="modal-overlay" id="modal-pin">
+<div id="modal-pin" class="modal-overlay">
   <div class="modal">
-    <h2 id="pin-modal-title">Inserir PIN</h2>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:16px" id="pin-modal-sub">Para editar a coleção de <strong id="pin-nome-span"></strong></p>
-    <div class="pin-display">
-      <div class="pin-dot" id="pdot0"></div>
-      <div class="pin-dot" id="pdot1"></div>
-      <div class="pin-dot" id="pdot2"></div>
-      <div class="pin-dot" id="pdot3"></div>
+    <h3 id="pin-modal-title">Introduzir PIN</h3>
+    <p style="font-size:11px;color:var(--text2);text-align:center;margin-bottom:12px" id="pin-modal-sub">PIN de 4 dígitos para editar</p>
+    <div class="pin-dots" id="pin-entry">
+      <input class="pin-dot" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-dot" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-dot" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="pin-dot" maxlength="1" inputmode="numeric" pattern="[0-9]">
     </div>
-    <div class="pin-pad">
-      <button class="pin-key" onclick="pinKey('enter',1)">1</button>
-      <button class="pin-key" onclick="pinKey('enter',2)">2</button>
-      <button class="pin-key" onclick="pinKey('enter',3)">3</button>
-      <button class="pin-key" onclick="pinKey('enter',4)">4</button>
-      <button class="pin-key" onclick="pinKey('enter',5)">5</button>
-      <button class="pin-key" onclick="pinKey('enter',6)">6</button>
-      <button class="pin-key" onclick="pinKey('enter',7)">7</button>
-      <button class="pin-key" onclick="pinKey('enter',8)">8</button>
-      <button class="pin-key" onclick="pinKey('enter',9)">9</button>
-      <button class="pin-key del" onclick="pinKey('enter','del')">⌫</button>
-      <button class="pin-key" onclick="pinKey('enter',0)">0</button>
-      <button class="pin-key del" onclick="pinKey('enter','clr')">✕</button>
-    </div>
-    <div class="modal-error" id="pin-error"></div>
-    <button class="modal-btn secondary" onclick="abrirColecaoReadonly()">👁 Só Visualizar</button>
-    <button class="modal-btn secondary" style="margin-top:6px" onclick="fecharModal('modal-pin')">Cancelar</button>
+    <p id="pin-error" style="font-size:12px;color:var(--red);text-align:center;display:none">PIN incorreto</p>
+    <button class="modal-btn primary" onclick="submitPin()">Confirmar</button>
+    <button class="modal-btn secondary" onclick="closeModals()">Cancelar</button>
   </div>
 </div>
 
-<!-- COLECAO VIEW -->
-<div class="screen" id="screen-colecao">
-  <div class="col-header">
-    <div class="col-header-top">
-      <button class="btn-back" onclick="voltarHome()">‹</button>
-      <div class="col-header-title" id="col-title">Coleção</div>
-      <div style="font-size:11px;color:var(--text2);text-align:right">
-        <span id="col-mode-badge" style="padding:3px 8px;border-radius:6px;font-weight:700;font-size:10px"></span>
-      </div>
-      <button class="btn-edit-col" id="btn-editar-col" onclick="pedirPin()" style="display:none">🔓 Editar</button>
-    </div>
-    <div class="col-progress-bar"><div class="col-progress-fill" id="col-prog-fill"></div></div>
-  </div>
-
-  <div class="col-nav">
-    <button class="col-nav-btn active" onclick="mudarTab('colecao',this)">📚 Coleção</button>
-    <button class="col-nav-btn" onclick="mudarTab('falta',this)">❌ Falta</button>
-    <button class="col-nav-btn" onclick="mudarTab('repetidos',this)">🔁 Repetidos</button>
-    <button class="col-nav-btn" onclick="mudarTab('trocas',this)">🤝 Trocas</button>
-    <button class="col-nav-btn" onclick="mudarTab('resumo',this)">📊 Resumo</button>
-  </div>
-
-  <!-- Lista de cromos -->
-  <div id="tab-list-wrap" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
-    <div class="col-controls">
-      <input class="col-search" id="col-search" type="text" placeholder="🔍 Pesquisar..." oninput="renderList()">
-      <select class="col-select" id="col-select" onchange="renderList()"></select>
-    </div>
-    <div class="col-status" id="col-status"></div>
-    <div class="col-list" id="col-list"></div>
-  </div>
-
-  <!-- Trocas -->
-  <div id="tab-trocas-wrap" style="display:none;flex:1;overflow:hidden;flex-direction:column">
-    <div class="trocas-wrap" id="trocas-content"></div>
-  </div>
-
-  <!-- Resumo/Stats -->
-  <div id="tab-stats-wrap" style="display:none;flex:1;overflow:hidden;flex-direction:column">
-    <div class="stats-wrap" id="stats-content"></div>
+<div id="modal-edit-coll" class="modal-overlay">
+  <div class="modal">
+    <h3>Editar Coleção</h3>
+    <input class="modal-input" id="edit-coll-name" placeholder="Nome da coleção" maxlength="30">
+    <button class="modal-btn primary" onclick="saveCollEdit()">Guardar</button>
+    <button class="modal-btn danger" onclick="confirmDeleteColl()">Apagar Coleção</button>
+    <button class="modal-btn secondary" onclick="closeModals()">Cancelar</button>
   </div>
 </div>
 
+<div id="modal-confirm-delete" class="modal-overlay">
+  <div class="modal">
+    <h3>Apagar Coleção?</h3>
+    <p style="font-size:13px;color:var(--text2);text-align:center;margin-bottom:16px">Esta ação não pode ser revertida.</p>
+    <button class="modal-btn danger" onclick="deleteCollection()">Sim, Apagar</button>
+    <button class="modal-btn secondary" onclick="closeModals()">Cancelar</button>
+  </div>
+</div>
 <script>
-// ─── CONFIG ───────────────────────────────────────────────────────────────────
-const SUPABASE_URL = "https://ksvvpuezzkebvtzjdlfs.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzdnZwdWV6emtlYnZ0empkbGZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyODEwMTQsImV4cCI6MjA5Mzg1NzAxNH0.iVxBlZo7aCT7tpJs13F2Zct97eTdMZ5QZfEnZBrq7sc";
+// ═══════════════════════════════════════════════════════════════════════════════
+// SUPABASE CONFIG
+// ═══════════════════════════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://ksvvpuezzkebvtzjdlfs.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtzdnlwdnp6a2VidnR6amRsZnMiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc0Njc5OTkzOCwiZXhwIjoyMDYyMzc1OTM4fQ.a0MFJrOFQlKyDMK2WJz5bEwGVXOqpSG_N9Y63Gs_kLQ';
 
-const api = async (method, path, body) => {
+async function sbFetch(path, opts = {}) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    method, headers: {
-      "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}`,
-      "Content-Type": "application/json", "Prefer": method==="POST" ? "return=representation" : "return=minimal"
+    ...opts,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer || '',
+      ...opts.headers,
     },
-    body: body ? JSON.stringify(body) : undefined
   });
-  if (!res.ok) { const e = await res.text(); throw new Error(e); }
-  try { return await res.json(); } catch { return null; }
+  if (opts.method === 'DELETE') return null;
+  return res.json();
+}
+
+const sb = {
+  async getColecoes() {
+    return sbFetch('colecoes?order=criado_em.asc');
+  },
+  async insertColecao(nome, pin_hash) {
+    return sbFetch('colecoes', {
+      method: 'POST', prefer: 'return=representation',
+      body: JSON.stringify({ nome, pin_hash }),
+    });
+  },
+  async updateColecao(id, data) {
+    return sbFetch(`colecoes?id=eq.${id}`, {
+      method: 'PATCH', prefer: 'return=representation',
+      body: JSON.stringify(data),
+    });
+  },
+  async deleteColecao(id) {
+    await sbFetch(`cromos?colecao_id=eq.${id}`, { method: 'DELETE' });
+    await sbFetch(`colecoes?id=eq.${id}`, { method: 'DELETE' });
+  },
+  async getAllCromos() {
+    return sbFetch('cromos?select=colecao_id,cromo_id,quantidade');
+  },
+  async upsertCromo(colecaoId, cromoId, quantidade) {
+    const existing = await sbFetch(`cromos?colecao_id=eq.${colecaoId}&cromo_id=eq.${cromoId}&select=id`);
+    if (Array.isArray(existing) && existing.length > 0) {
+      if (quantidade <= 0) {
+        await sbFetch(`cromos?colecao_id=eq.${colecaoId}&cromo_id=eq.${cromoId}`, { method: 'DELETE' });
+      } else {
+        await sbFetch(`cromos?colecao_id=eq.${colecaoId}&cromo_id=eq.${cromoId}`, {
+          method: 'PATCH', prefer: 'return=representation',
+          body: JSON.stringify({ quantidade, atualizado_em: new Date().toISOString() }),
+        });
+      }
+    } else if (quantidade > 0) {
+      await sbFetch('cromos', {
+        method: 'POST', prefer: 'return=representation',
+        body: JSON.stringify({ colecao_id: colecaoId, cromo_id: cromoId, quantidade }),
+      });
+    }
+  },
 };
 
-// ─── STICKER DATA ─────────────────────────────────────────────────────────────
-const INTRO = [
-  {id:"INT1",name:"Capa / Cover"},{id:"INT2",name:"FIFA World Cup Trophy 1/2"},
-  {id:"INT3",name:"FIFA World Cup Trophy 2/2"},{id:"INT4",name:"Mascote 1/2"},
-  {id:"INT5",name:"Mascote 2/2"},{id:"INT6",name:"Logo 1/2"},{id:"INT7",name:"Logo 2/2"},
-  {id:"INT8",name:"Estadio SoFi Los Angeles"},{id:"INT9",name:"Estadio MetLife Nova Iorque"},
+// ═══════════════════════════════════════════════════════════════════════════════
+// OFFICIAL CHECKLIST — 980 stickers
+// ═══════════════════════════════════════════════════════════════════════════════
+const SPECIAL = [
+  ["00","Panini Logo",1],["FWC1","Official Emblem",1],["FWC2","Official Emblem",1],
+  ["FWC3","Official Mascots",1],["FWC4","Official Slogan",1],["FWC5","Official Ball",1],
+  ["FWC6","Canada - Host Cities",1],["FWC7","Mexico - Host Cities",1],["FWC8","USA - Host Cities",1],
 ];
-const MUSEUM = [
-  {id:"FWC1",name:"Brasil 1970"},{id:"FWC2",name:"Alemanha 1974"},{id:"FWC3",name:"Argentina 1978"},
-  {id:"FWC4",name:"Itália 1982"},{id:"FWC5",name:"Argentina 1986"},{id:"FWC6",name:"Alemanha 1990"},
-  {id:"FWC7",name:"Brasil 1994"},{id:"FWC8",name:"França 1998"},{id:"FWC9",name:"Brasil 2002"},
-  {id:"FWC10",name:"Itália 2006"},{id:"FWC11",name:"Espanha 2010"},
+const HISTORY = [
+  ["FWC9","Italy 1934"],["FWC10","Uruguay 1950"],["FWC11","W. Germany 1954"],
+  ["FWC12","Brazil 1962"],["FWC13","W. Germany 1974"],["FWC14","Argentina 1986"],
+  ["FWC15","Brazil 1994"],["FWC16","Brazil 2002"],["FWC17","Italy 2006"],
+  ["FWC18","Germany 2014"],["FWC19","Argentina 2022"],
 ];
-const TEAMS = [
-  {code:"USA",name:"Estados Unidos",flag:"🇺🇸",players:["Matt Freese","Chris Richards","Tim Ream","Mark McKenzie","Alex Freeman","Antonee Robinson","Tyler Adams","Tanner Tessmann","Weston McKennie","Christian Roldan","Timothy Weah","Team Photo","Diego Luna","Malik Tillman","Christian Pulisic","Brenden Aaronson","Ricardo Pepi","Haji Wright","Folarin Balogun"]},
-  {code:"CAN",name:"Canadá",flag:"🇨🇦",players:["Maxime Crépeau","Kamal Miller","Steven Vitória","Derek Cornelius","Richie Laryea","Alistair Johnston","Stephen Eustáquio","Jonathan Osorio","Liam Millar","Team Photo","Junior Hoilett","Tajon Buchanan","Jonathan David","Cyle Larin","Alphonso Davies","Lucas Cavallini","Ismael Koné","Mark-Anthony Kaye","Theo Corbeanu"]},
-  {code:"MEX",name:"México",flag:"🇲🇽",players:["Guillermo Ochoa","Johan Vásquez","César Montes","Jesús Angulo","Jorge Sánchez","Gerardo Arteaga","Edson Álvarez","Carlos Rodríguez","Roberto Alvarado","Team Photo","Alexis Vega","Orbelín Pineda","Santiago Giménez","Hirving Lozano","Raúl Jiménez","Henry Martín","Uriel Antuna","Charly Rodríguez","Julián Quiñones"]},
-  {code:"ARG",name:"Argentina",flag:"🇦🇷",players:["Emiliano Martínez","Franco Armani","Marcos Acuña","Nahuel Molina","Nicolás Otamendi","Cristian Romero","Rodrigo De Paul","Ángel Di María","Giovani Lo Celso","Team Photo","Leandro Paredes","Julián Álvarez","Lautaro Martínez","Alexis Mac Allister","Thiago Almada","Enzo Fernández","Paulo Dybala","Lionel Messi","Nicolás González"]},
-  {code:"BRA",name:"Brasil",flag:"🇧🇷",players:["Alisson","Ederson","Danilo","Éder Militão","Marquinhos","Gabriel Magalhães","Alex Sandro","Casemiro","Lucas Paquetá","Team Photo","Antony","Gabriel Jesus","Richarlison","Neymar","Rodrygo","Vinicius Jr.","Raphinha","Endrick","Bruno Guimarães"]},
-  {code:"FRA",name:"França",flag:"🇫🇷",players:["Mike Maignan","Hugo Lloris","Benjamin Pavard","Jules Koundé","Raphaël Varane","Dayot Upamecano","Théo Hernández","Aurélien Tchouaméni","Adrien Rabiot","Team Photo","Antoine Griezmann","Ousmane Dembélé","Marcus Thuram","Olivier Giroud","Kylian Mbappé","Christopher Nkunku","Eduardo Camavinga","Randal Kolo Muani","William Saliba"]},
-  {code:"ENG",name:"Inglaterra",flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",players:["Jordan Pickford","Aaron Ramsdale","Kyle Walker","Reece James","John Stones","Harry Maguire","Luke Shaw","Jude Bellingham","Declan Rice","Team Photo","Bukayo Saka","Marcus Rashford","Raheem Sterling","Harry Kane","Phil Foden","Mason Mount","Trent Alexander-Arnold","Jack Grealish","Cole Palmer"]},
-  {code:"ESP",name:"Espanha",flag:"🇪🇸",players:["Unai Simón","David Raya","Dani Carvajal","Jesús Navas","Aymeric Laporte","Pau Torres","Jordi Alba","Rodri","Sergio Busquets","Team Photo","Pedro Porro","Ferran Torres","Ansu Fati","Álvaro Morata","Marco Asensio","Gavi","Pedri","Lamine Yamal","Mikel Oyarzabal"]},
-  {code:"GER",name:"Alemanha",flag:"🇩🇪",players:["Manuel Neuer","Marc-André ter Stegen","Niklas Süle","Antonio Rüdiger","Matthias Ginter","David Raum","Thomas Müller","İlkay Gündoğan","Joshua Kimmich","Team Photo","Leon Goretzka","Leroy Sané","Serge Gnabry","Kai Havertz","Timo Werner","Jamal Musiala","Florian Wirtz","Niclas Füllkrug","Chris Führich"]},
-  {code:"POR",name:"Portugal",flag:"🇵🇹",players:["Rui Patrício","Diogo Costa","João Cancelo","Nélson Semedo","Rúben Dias","Pepe","Raphaël Guerreiro","Rúben Neves","Bernardo Silva","Team Photo","João Moutinho","Diogo Jota","André Silva","Cristiano Ronaldo","Rafael Leão","Gonçalo Ramos","Pedro Neto","Vitinha","Bruno Fernandes"]},
-  {code:"NED",name:"Países Baixos",flag:"🇳🇱",players:["Jasper Cillessen","Remko Pasveer","Denzel Dumfries","Daley Blind","Virgil van Dijk","Stefan de Vrij","Tyrell Malacia","Frenkie de Jong","Georginio Wijnaldum","Team Photo","Teun Koopmeiners","Steven Berghuis","Memphis Depay","Cody Gakpo","Donyell Malen","Xavi Simons","Wout Weghorst","Tijjani Reijnders","Ryan Gravenberch"]},
-  {code:"BEL",name:"Bélgica",flag:"🇧🇪",players:["Thibaut Courtois","Simon Mignolet","Thomas Meunier","Toby Alderweireld","Jan Vertonghen","Wout Faes","Leander Dendoncker","Axel Witsel","Kevin De Bruyne","Team Photo","Youri Tielemans","Dries Mertens","Michy Batshuayi","Romelu Lukaku","Eden Hazard","Alexis Saelemaekers","Loïs Openda","Charles De Ketelaere","Jeremy Doku"]},
-  {code:"ITA",name:"Itália",flag:"🇮🇹",players:["Gianluigi Donnarumma","Alex Meret","Giovanni Di Lorenzo","Alessandro Bastoni","Giorgio Scalvini","Federico Dimarco","Nicolo Barella","Jorginho","Marco Verratti","Team Photo","Lorenzo Pellegrini","Federico Chiesa","Giacomo Raspadori","Ciro Immobile","Gianluca Scamacca","Sandro Tonali","Matteo Politano","Davide Frattesi","Mateo Retegui"]},
-  {code:"CRO",name:"Croácia",flag:"🇭🇷",players:["Dominik Livaković","Ivo Grbić","Josip Juranović","Domagoj Vida","Dejan Lovren","Joško Gvardiol","Borna Sosa","Mateo Kovačić","Luka Modrić","Team Photo","Marcelo Brozović","Nikola Vlašić","Ante Budimir","Ivan Perišić","Marko Livaja","Bruno Petković","Lovro Majer","Martin Baturina","Andrej Kramarić"]},
-  {code:"MAR",name:"Marrocos",flag:"🇲🇦",players:["Yassine Bounou","Munir Mohamedi","Achraf Hakimi","Jawad El Yamiq","Nayef Aguerd","Romain Saïss","Noussair Mazraoui","Sofyan Amrabat","Ilias Chair","Team Photo","Amine Harit","Abde Ezzalzouli","Youssef En-Nesyri","Ayoub El Kaabi","Munir El Haddadi","Bilal El Khannouss","Azzedine Ounahi","Selim Amallah","Hakim Ziyech"]},
-  {code:"SEN",name:"Senegal",flag:"🇸🇳",players:["Édouard Mendy","Alfred Gomis","Kalidou Koulibaly","Abdou Diallo","Pape Abou Cissé","Formose Mendy","Idrissa Gueye","Pape Matar Sarr","Nampalys Mendy","Team Photo","Krepin Diatta","Ismaïla Sarr","Boulaye Dia","Sadio Mané","Habib Diallo","Cheikhou Kouyaté","Nicolas Jackson","Lamine Camara","Iliman Ndiaye"]},
-  {code:"GHA",name:"Gana",flag:"🇬🇭",players:["Lawrence Ati-Zigi","Joseph Wollacott","Daniel Amartey","Gideon Mensah","Alexander Djiku","Tariq Lamptey","Mohammed Kudus","Thomas Partey","Andre Ayew","Team Photo","Jordan Ayew","Kamaldeen Sulemana","Inaki Williams","Antoine Semenyo","Richmond Boakye","Ernest Nuamah","Abdul Fatawu","Brayann Pereira","Osman Bukari"]},
-  {code:"NGA",name:"Nigéria",flag:"🇳🇬",players:["Francis Uzoho","Maduka Okoye","Ola Aina","William Troost-Ekong","Leon Balogun","Calvin Bassey","Semi Ajayi","Wilfred Ndidi","Alex Iwobi","Team Photo","Frank Onyeka","Kelechi Iheanacho","Samuel Chukwueze","Victor Osimhen","Moses Simon","Terem Moffi","Taiwo Awoniyi","Victor Boniface","Ademola Lookman"]},
-  {code:"CAM",name:"Camarões",flag:"🇨🇲",players:["André Onana","Devis Epassy","Ambroise Oyongo","Michael Ngadeu-Ngadjui","Jean-Charles Castelletto","Collins Fai","Harold Moukoudi","Samuel Gouet","Jean Onana","Team Photo","Jérôme Ngom Mbekeli","Georges-Kevin N'Koudou","Nicolas Moumi Ngamaleu","Vincent Aboubakar","Karl Toko Ekambi","Martin Hongla","Bryan Mbeumo","Clinton Njie","Zambo Anguissa"]},
-  {code:"EGY",name:"Egito",flag:"🇪🇬",players:["Mohamed El-Shenawy","Gabaski","Ahmed Hegazi","Omar Kamal","Mohamed Abdelmonem","Akram Tawfik","Zizo","Tarek Hamed","Hamdi Fathi","Team Photo","Mohamed Elneny","Emam Ashour","Mostafa Mohamed","Mohamed Salah","Omar Marmoush","Mahmoud Trezeguet","Amr El Sulaya","Ahmed Sayed","Trézeguet"]},
-  {code:"JPN",name:"Japão",flag:"🇯🇵",players:["Shuichi Gonda","Zion Suzuki","Hiroki Sakai","Ko Itakura","Maya Yoshida","Shogo Taniguchi","Yuto Nagatomo","Wataru Endo","Takefusa Kubo","Team Photo","Junya Ito","Daichi Kamada","Kaoru Mitoma","Ayase Ueda","Ritsu Doan","Ao Tanaka","Takumi Minamino","Yukinari Sugawara","Yuya Osako"]},
-  {code:"KOR",name:"Coreia do Sul",flag:"🇰🇷",players:["Kim Seung-gyu","Jo Hyeon-woo","Kim Moon-hwan","Kim Min-jae","Kwon Kyung-won","Kim Young-gwon","Hong Chul","Jung Woo-young","Lee Jae-sung","Team Photo","Na Sang-ho","Son Heung-min","Hwang Hee-chan","Cho Gue-sung","Lee Kang-in","Hwang In-beom","Paik Seung-ho","Jeong Sang-bin","Oh Hyeon-gyu"]},
-  {code:"AUS",name:"Austrália",flag:"🇦🇺",players:["Mat Ryan","Andrew Redmayne","Nathaniel Atkinson","Miloš Degenek","Trent Sainsbury","Harry Souttar","Aziz Behich","Aaron Mooy","Jackson Irvine","Team Photo","Riley McGree","Ajdin Hrustic","Craig Goodwin","Martin Boyle","Mathew Leckie","Jamie Maclaren","Mitch Duke","Garang Kuol","Keanu Baccus"]},
-  {code:"IRN",name:"Irão",flag:"🇮🇷",players:["Alireza Beiranvand","Hossein Hosseini","Sadegh Moharrami","Majid Hosseini","Mohammad Hosseini","Shojae Khalilzadeh","Milad Mohammadi","Ahmad Nourollahi","Alireza Jahanbakhsh","Team Photo","Saeid Ezatolahi","Ali Gholizadeh","Sardar Azmoun","Mehdi Taremi","Karim Ansarifard","Ramin Rezaeian","Ehsan Hajsafi","Ali Karimi","Omid Noorafkan"]},
-  {code:"SAU",name:"Arábia Saudita",flag:"🇸🇦",players:["Mohammed Al-Owais","Abdulrahman Al-Aqidi","Sultan Al-Ghannam","Ali Al-Bulaihi","Abdulelah Al-Amri","Hassan Tambakti","Saud Abdulhamid","Salman Al-Faraj","Abdullah Otayf","Team Photo","Mohamed Kanno","Salem Al-Dawsari","Firas Al-Buraikan","Saleh Al-Shehri","Ali Al-Hassan","Hattan Bahebri","Mohammed Al-Burayk","Yasir Al-Shahrani","Nasser Al-Dawsari"]},
-  {code:"QAT",name:"Catar",flag:"🇶🇦",players:["Saad Al Sheeb","Meshaal Barsham","Pedro Miguel","Bassam Al-Rawi","Boualem Khoukhi","Tarek Salman","Homam Ahmed","Karim Boudiaf","Assim Madibo","Team Photo","Ahmed Fatehi","Hashem Ali","Akram Afif","Almoez Ali","Hasan Al-Haydos","Ismail Mohamad","Ahmed Alaaeldin","Khalid Muneer","Mohammed Waad"]},
-  {code:"URU",name:"Uruguai",flag:"🇺🇾",players:["Fernando Muslera","Sergio Rochet","Nahitan Nández","José María Giménez","Diego Godín","Ronald Araújo","Mathías Olivera","Lucas Torreira","Rodrigo Bentancur","Team Photo","Federico Valverde","Giorgian de Arrascaeta","Nicolás De La Cruz","Luis Suárez","Darwin Núñez","Facundo Pellistri","Maxi Gómez","Facundo Torres","Agustín Canobbio"]},
-  {code:"COL",name:"Colômbia",flag:"🇨🇴",players:["David Ospina","Camilo Vargas","Santiago Arias","Yerry Mina","Dávinson Sánchez","William Tesillo","Johan Mojica","Wilmar Barrios","Mateus Uribe","Team Photo","Jefferson Lerma","Juan Cuadrado","James Rodríguez","Radamel Falcao","Rafael Santos Borré","Luis Díaz","Jhon Jáder Durán","Carrascal","Richard Ríos"]},
-  {code:"ECU",name:"Equador",flag:"🇪🇨",players:["Hernán Galíndez","Alexander Domínguez","Ángelo Preciado","Félix Torres","Piero Hincapié","Robert Arboleda","Pervis Estupiñán","Moisés Caicedo","Jhegson Méndez","Team Photo","Gonzalo Plata","Romario Ibarra","Michael Estrada","Enner Valencia","Kevin Rodríguez","Djorkaeff Reasco","Jeremy Sarmiento","Jordy Caicedo","Kendry Páez"]},
-  {code:"CHL",name:"Chile",flag:"🇨🇱",players:["Claudio Bravo","Gabriel Arias","Óscar Opazo","Paulo Díaz","Gary Medel","Guillermo Maripán","Alexis Sánchez","Charles Aránguiz","Arturo Vidal","Team Photo","Erick Pulgar","Nicolás Castillo","Eduardo Vargas","Iván Morales","Ben Brereton Díaz","Marcos Bolados","Alexander Aravena","Marcelino Núñez","Darío Osorio"]},
-  {code:"PER",name:"Peru",flag:"🇵🇪",players:["Pedro Gallese","Carlos Cáceda","Luis Advíncula","Alexander Callens","Carlos Zambrano","Miguel Araujo","Marcos López","Renato Tapia","Yoshimar Yotún","Team Photo","Andy Polo","Christofer Gonzales","Christian Cueva","Gianluca Lapadula","André Carrillo","Edison Flores","Raúl Ruidíaz","Bryan Reyna","Santiago Ormeño"]},
-  {code:"PAR",name:"Paraguai",flag:"🇵🇾",players:["Antony Silva","Rodrigo Muñoz","Gustavo Gómez","Omar Alderete","Fabián Balbuena","Blas Riveros","Mathías Villasanti","Andrés Cubas","Hernán Pérez","Team Photo","Ángel Romero","Óscar Romero","Robert Morales","Braian Samudio","Carlos González","Julio Enciso","Miguel Almirón","Ramón Sosa","Marcelo Pereira"]},
-  {code:"BOL",name:"Bolívia",flag:"🇧🇴",players:["Carlos Lampe","Rubén Cordano","José Carrasco","Héctor Cuéllar","Adrián Jusino","Jairo Quinteros","Diego Wayar","Fernando Saucedo","Leonel Justiniano","Team Photo","Marc Enoumba","Rodrigo Ramallo","Henry Vaca","Marcelo Moreno","Erwin Saavedra","Bruno Miranda","Juan Carlos Arce","Ramiro Vaca","Víctor Ábrego"]},
-  {code:"VEN",name:"Venezuela",flag:"🇻🇪",players:["Wuilker Faríñez","Rafael Romo","Ronald Hernández","Chancellor","Nahuel Ferraresi","Jon Aramburu","Yangel Herrera","Tomás Rincón","Junior Moreno","Team Photo","Adalberto Peñaranda","Yeferson Soteldo","Salomón Rondón","Darwin Machís","Josef Martínez","Rómulo Otero","Jhon Murillo","Eric Ramírez","Eduard Bello"]},
-  {code:"SUI",name:"Suíça",flag:"🇨🇭",players:["Yann Sommer","Gregor Kobel","Manuel Akanji","Nico Elvedi","Fabian Schär","Silvan Widmer","Remo Freuler","Granit Xhaka","Denis Zakaria","Team Photo","Xherdan Shaqiri","Renato Steffen","Noah Okafor","Breel Embolo","Haris Seferović","Ruben Vargas","Michel Aebischer","Dan Ndoye","Fabian Rieder"]},
-  {code:"AUT",name:"Áustria",flag:"🇦🇹",players:["Patrick Pentz","Heinz Lindner","Philipp Lienhart","Kevin Danso","Alexander Prass","Stefan Posch","Flavius Daniliuc","Florian Grillitsch","Christoph Baumgartner","Team Photo","Marcel Sabitzer","Nicolas Seiwald","Michael Gregoritsch","Marko Arnautovic","Patrick Wimmer","Konrad Laimer","Romano Schmid","Andreas Weimann","Florian Kainz"]},
-  {code:"POL",name:"Polónia",flag:"🇵🇱",players:["Wojciech Szczęsny","Łukasz Fabiański","Matty Cash","Jan Bednarek","Kamil Glik","Bartosz Bereszyński","Tymoteusz Puchacz","Grzegorz Krychowiak","Mateusz Klich","Team Photo","Sebastian Szymański","Damian Szymański","Karol Świderski","Arkadiusz Milik","Robert Lewandowski","Piotr Zieliński","Michał Skóraś","Kamil Grosicki","Nicola Zalewski"]},
-  {code:"DEN",name:"Dinamarca",flag:"🇩🇰",players:["Kasper Schmeichel","Oliver Christensen","Joachim Andersen","Andreas Christensen","Victor Nelsson","Jens Stryger Larsen","Joakim Mæhle","Pierre-Emile Højbjerg","Christian Eriksen","Team Photo","Mathias Jensen","Thomas Delaney","Yussuf Poulsen","Jonas Wind","Kasper Dolberg","Martin Braithwaite","Andreas Skov Olsen","Mikkel Damsgaard","Mohamed Daramy"]},
-  {code:"SWE",name:"Suécia",flag:"🇸🇪",players:["Robin Olsen","Karl-Johan Johnsson","Mikael Lustig","Marcus Danielson","Victor Nilsson Lindelöf","Isak Hien","Ludwig Augustinsson","Emil Forsberg","Albin Ekdal","Team Photo","Dejan Kulusevski","Viktor Claesson","Alexander Isak","Robin Quaison","Sebastian Larsson","Pontus Jansson","Anthony Elanga","Jesper Karlsson","Mattias Svanberg"]},
-  {code:"NOR",name:"Noruega",flag:"🇳🇴",players:["Ørjan Nyland","Rune Jarstein","Stefan Strandberg","Leo Østigård","Andreas Hanche-Olsen","Birger Meling","Omar Elabdellaoui","Sander Berge","Martin Ødegaard","Team Photo","Mohamed Elyounoussi","Patrick Berg","Erling Haaland","Alexander Sørloth","Ola Solbakken","Antonio Nusa","Kristian Thorstvedt","Jens Petter Hauge","Fredrik Aursnes"]},
-  {code:"SCO",name:"Escócia",flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",players:["Craig Gordon","Angus Gunn","Jack Hendry","Scott McKenna","Grant Hanley","Andrew Robertson","Kieran Tierney","Stuart Armstrong","John McGinn","Team Photo","Callum McGregor","Ryan Christie","James Forrest","Kenny McLean","Che Adams","Lyndon Dykes","Scott McTominay","Billy Gilmour","Ryan Jack"]},
-  {code:"WAL",name:"País de Gales",flag:"🏴󠁧󠁢󠁷󠁬󠁳󠁿",players:["Wayne Hennessey","Danny Ward","Chris Gunter","Neco Williams","Joe Allen","Joe Morrell","Ben Davies","Aaron Ramsey","Ethan Ampadu","Team Photo","Jonathan Williams","Harry Wilson","David Brooks","Mark Harris","Kieffer Moore","Daniel James","Dylan Levitt","Connor Roberts","Gareth Bale"]},
-  {code:"CZE",name:"República Checa",flag:"🇨🇿",players:["Jiří Pavlenka","Tomáš Vaclík","Vladimír Coufal","Ondřej Duda","Lukáš Hrádecký","Tomáš Holeš","Pavel Kadeřábek","Aleš Matějů","Alex Král","Team Photo","Lukáš Provod","Tomáš Souček","Antonín Barák","Adam Hložek","Patrik Schick","Tomáš Pekhart","David Doudera","Matěj Jurásek","Ondřej Lingr"]},
-  {code:"SRB",name:"Sérvia",flag:"🇷🇸",players:["Vanja Milinković-Savić","Marko Dmitrović","Strahinja Pavlović","Nikola Milenkovic","Stefan Mitrović","Mihailo Ristić","Nemanja Maksimović","Saša Lukić","Nemanja Gudelj","Team Photo","Darko Lazović","Sergej Milinković-Savić","Filip Kostić","Luka Jović","Aleksandar Mitrović","Dušan Tadic","Andrija Živković","Dušan Vlahović","Ivan Ilić"]},
-  {code:"GRE",name:"Grécia",flag:"🇬🇷",players:["Odysseas Vlachodimos","Stefanos Kapino","Konstantinos Tsimikas","Kostas Manolas","Panagiotis Retsos","Sokratis","Giorgos Masouras","Manos Siopis","Tasos Bakasetas","Team Photo","Anastasios Donis","Dimitris Limnios","Vangelis Pavlidis","Anastasios Douvikas","Petros Mantalos","Christos Tzolis","Dimitris Pelkas","Fotis Ioannidis","Konstantinos Fortounis"]},
-  {code:"UZB",name:"Uzbequistão",flag:"🇺🇿",players:["Utkir Yusupov","Farrukh Sayfiev","Sherzod Nasrullaev","Umar Eshmurodov","Husniddin Aliqulov","Rustamjon Ashurmatov","Khojiakbar Alijonov","Abdukodir Khusanov","Odiljon Hamrobekov","Team Photo","Otabek Shukurov","Jamshid Iskanderov","Jaloliddin Masharipov","Eldor Shomurodov","Dostonbek Khamdamov","Sirojiddin Bekmurodov","Lochinbek Iskandarov","Jasurbek Yakhshiboev","Azizbek Turgunboev"]},
-  {code:"NZL",name:"Nova Zelândia",flag:"🇳🇿",players:["Stefan Marinovic","Oliver Sail","Nando Pijnaker","Tommy Smith","Michael Boxall","Tim Payne","Liberato Cacace","Ryan Thomas","Joe Bell","Team Photo","Clayton Lewis","Elijah Just","Marko Stamenic","Chris Wood","Sarpreet Singh","Myer Bevan","Matt Garbett","Callum McCowatt","Ben Waine"]},
+const T = [
+["MEX","México","🇲🇽","Luis Malagón,Johan Vasquez,Jorge Sánchez,Cesar Montes,Jesus Gallardo,Israel Reyes,Diego Lainez,Carlos Rodriguez,Edson Alvarez,Orbelin Pineda,Marcel Ruiz,Team Photo,Érick Sánchez,Hirving Lozano,Santiago Giménez,Raúl Jiménez,Alexis Vega,Roberto Alvarado,Cesar Huerta"],
+["RSA","South Africa","🇿🇦","Ronwen Williams,Sipho Chaine,Aubrey Modiba,Samukele Kabini,Mbekezeli Mbokazi,Khulumani Ndamane,Siyabonga Ngezana,Khuliso Mudau,Nkosinathi Sibisi,Teboho Mokoena,Thalente Mbatha,Team Photo,Bathasi Aubaas,Yaya Sithole,Sipho Mbule,Lyle Foster,Iqraam Rayners,Mohau Nkota,Oswin Appollis"],
+["KOR","South Korea","🇰🇷","Hyeon-woo Jo,Seung-Gyu Kim,Min-jae Kim,Yu-min Cho,Young-woo Seol,Han-beom Lee,Tae-seok Lee,Myung-jae Lee,Jae-sung Lee,In-beom Hwang,Kang-in Lee,Team Photo,Seung-ho Paik,Jens Castrop,Dongg-yeong Lee,Gue-sung Cho,Heung-min Son,Hee-chan Hwang,Hyeon-Gyu Oh"],
+["CZE","Czechia","🇨🇿","Matej Kovar,Jindrich Stanek,Ladislav Krejci,Vladimir Coufal,Jaroslav Zeleny,Tomas Holes,David Zima,Michal Sadilek,Lukas Provod,Lukas Cerv,Tomas Soucek,Team Photo,Pavel Sulc,Matej Vydra,Vasil Kusej,Tomas Chory,Vaclav Cerny,Adam Hlozek,Patrik Schick"],
+["CAN","Canada","🇨🇦","Dayne St.Clair,Alphonso Davies,Alistair Johnston,Samuel Adekugbe,Riche Larvea,Derek Cornelius,Moïse Bombito,Kamal Miller,Stephen Eustáquio,Ismaël Koné,Jonathan Osorio,Team Photo,Jacob Shaffelburg,Mathieu Choinière,Niko Sigur,Tajon Buchanan,Liam Millar,Cyle Larin,Jonathan David"],
+["BIH","Bosnia & Herz.","🇧🇦","Nikola Vasilj,Amer Dedic,Sead Kolasinac,Tarik Muharemovic,Nihad Mujakic,Nikola Katic,Amir Hadziahmetovic,Benjamin Tahirovic,Armin Gigovic,Ivan Sunjic,Ivan Basic,Team Photo,Dzenis Burnic,Esmir Bajraktarevic,Amar Memic,Ermedin Demirovic,Edin Dzeko,Samed Bazdar,Haris Tabakovic"],
+["QAT","Qatar","🇶🇦","Meshaal Barsham,Sultan Albrake,Lucas Mendes,Homam Ahmed,Boualem Khoukhi,Pedro Miguel,Tarek Salman,Mohamed Al-Mannai,Karim Boudiaf,Assim Madibo,Ahmed Fatehi,Team Photo,Mohammed Waad,Abdulaziz Hatem,Hassan Al-Haydos,Edmilson Junior,Akram Hassan Afif,Ahmed Al Ganehi,Almoez Ali"],
+["SUI","Switzerland","🇨🇭","Gregor Kobel,Yvon Mvogo,Manuel Akanji,Ricardo Rodriguez,Nico Elvedi,Aurèle Amenda,Silvan Widmer,Granit Xhaka,Denis Zakaria,Remo Freuler,Fabian Rieder,Team Photo,Ardon Jashari,Johan Manzambi,Michel Aebischer,Breel Embolo,Ruben Vargas,Dan Ndoye,Zeki Amdouni"],
+["BRA","Brazil","🇧🇷","Alisson,Bento,Marquinhos,Éder Militão,Gabriel Magalhães,Danilo,Wesley,Lucas Paquetá,Casemiro,Bruno Guimarães,Luiz Henrique,Team Photo,Vinicius Júnior,Rodrygo,João Pedro,Matheus Cunha,Gabriel Martinelli,Raphinha,Estévão"],
+["MAR","Morocco","🇲🇦","Yassine Bounou,Munir El Kajoui,Achraf Hakimi,Noussair Mazraoui,Nayef Aguerd,Roman Saiss,Jawad El Yamio,Adam Masina,Sofyan Amrabat,Azzedine Ounahi,Eliesse Ben Seghir,Team Photo,Bilal El Khannouss,Ismael Saibari,Youssef En-Nesyri,Abde Ezzalzouli,Soufiane Rahimi,Brahim Diaz,Ayoub El Kaabi"],
+["HAI","Haiti","🇭🇹","Johny Placide,Carlens Arcus,Martin Expérience,Jean-Kevin Duverne,Ricardo Adé,Duke Lacroix,Garven Metusala,Hannes Delcroix,Leverton Pierre,Danley Jean Jacques,Jean-Ricner Bellegarde,Team Photo,Christopher Attys,Derrick Etienne Jr,Josue Casimir,Ruben Providence,Duckens Nazon,Louicius Deedson,Frantzdy Pierrot"],
+["SCO","Scotland","🏴󠁧󠁢󠁳󠁣󠁴󠁿","Angus Gunn,Jack Hendry,Kieran Tierney,Aaron Hickey,Andrew Robertson,Scott McKenna,John Souttar,Anthony Ralston,Grant Hanley,Scott McTominay,Billy Gilmour,Team Photo,Lewis Ferguson,Ryan Christie,Kenny McLean,John McGinn,Lyndon Dykes,Che Adams,Ben Gannon-Doak"],
+["USA","USA","🇺🇸","Math Freese,Chris Richards,Tim Ream,Mark McKenzie,Alex Freeman,Antonee Robinson,Tyler Adams,Tanner Tessmann,Weston McKenny,Christian Roldan,Timothy Weah,Team Photo,Diego Luna,Malik Tillman,Christian Pulisic,Brenden Aaronson,Ricardo Pepi,Haji Wright,Folarin Balogun"],
+["PAR","Paraguay","🇵🇾","Roberto Fernandez,Orlando Gill,Gustavo Gomez,Fabián Balbuena,Juan José Cáceres,Omar Alderete,Junior Alonso,Mathías Villasanti,Diego Gomez,Damián Bobadilla,Andres Cubas,Team Photo,Matias Galarza Fonda,Julio Enciso,Alejandro Romero Gamarra,Miguel Almirón,Ramon Sosa,Angel Romero,Antonio Sanabria"],
+["AUS","Australia","🇦🇺","Mathew Ryan,Joe Gauci,Harry Souttar,Alessandro Circati,Jordan Bos,Aziz Behich,Cameron Burgess,Lewis Miller,Milos Degenek,Jackson Irvine,Riley McGree,Team Photo,Aiden O'Neill,Connor Metcalfe,Patrick Yazbek,Craig Goodwin,Kusini Vengi,Nestory Irankunda,Mohamed Touré"],
+["TUR","Türkiye","🇹🇷","Ugurcan Cakir,Mert Muldur,Zeki Celik,Abdulkerim Bardakci,Caglar Soyuncu,Merih Demiral,Ferdi Kadioglu,Kaan Ayhan,Ismail Yuksek,Hakan Calhanoglu,Orkun Kokcu,Team Photo,Arda Guler,Irfan Can Kahveci,Yunus Akgun,Can Uzun,Baris Alper Yilmaz,Kerem Akturkoglu,Kenan Yildiz"],
+["GER","Germany","🇩🇪","Marc-André ter Stegen,Jonathan Tah,David Raum,Nico Schlotterbeck,Antonio Rüdiger,Waldemar Anton,Ridle Baku,Maximilian Mittelstadt,Joshua Kimmich,Florian Wirtz,Felix Nmecha,Team Photo,Leon Goretzka,Jamal Musiala,Serge Gnabry,Kai Havertz,Leroy Sane,Karim Adeyemi,Nick Woltemade"],
+["CUW","Curaçao","🇨🇼","Eloy Room,Armando Obispo,Sherel Floranus,Jurien Gaari,Joshua Brenet,Roshon Van Eijma,Shurandy Sambo,Livano Comenencia,Godfried Roemeratoe,Juninho Bacuna,Leandro Bacuna,Team Photo,Tahith Chong,Kenji Gorre,Jearl Margaritha,Jurgen Locadia,Jeremy Antonisse,Gervane Kastaneer,Sontje Hansen"],
+["CIV","Ivory Coast","🇨🇮","Yahia Fofana,Ghislain Konan,Wilfried Singo,Odilon Kossounou,Evan Ndicka,Willy Boly,Emmanuel Agbadou,Ousmane Diomande,Franck Kessie,Seko Fofana,Ibrahim Sangare,Team Photo,Jean-Philippe Gbamin,Amad Diallo,Sébastien Haller,Simon Adingra,Yan Diomande,Evann Guessand,Oumar Diakite"],
+["ECU","Ecuador","🇪🇨","Hernán Galíndez,Gonzalo Valle,Piero Hincapié,Pervis Estupiñán,Willian Pacho,Ángelo Preciado,Joel Ordóñez,Moises Caicedo,Alan Franco,Kendry Paez,Pedro Vite,Team Photo,John Veboah,Leonardo Campana,Gonzalo Plata,Nilson Angulo,Alan Minda,Kevin Rodriguez,Enner Valencia"],
+["NED","Netherlands","🇳🇱","Bart Verbruggen,Virgil van Dijk,Micky van de Ven,Jurrien Timber,Denzel Dumfries,Nathan Aké,Jeremie Frimpong,Jan Paul van Hecke,Tijjani Reijnders,Ryan Gravenberch,Teun Koopmeiners,Team Photo,Frenkie de Jong,Xavi Simons,Justin Kluivert,Memphis Depay,Donyell Malen,Wout Weghorst,Cody Gakpo"],
+["JPN","Japan","🇯🇵","Zion Suzuki,Henry Heroki Mochizuki,Ayumu Seko,Junnosuke Suzuki,Shogo Taniguchi,Tsuyoshi Watanabe,Kaishu Sano,Yuki Soma,Ao Tanaka,Daichi Kamada,Takefusa Kubo,Team Photo,Ritsu Doan,Keito Nakamura,Takumi Minamino,Shuto Machino,Junya Ito,Koki Ogawa,Ayase Ueda"],
+["SWE","Sweden","🇸🇪","Victor Johansson,Isak Hien,Gabriel Gudmundsson,Emil Holm,Victor Nilsson Lindelöf,Gustaf Lagerbielke,Lucas Bergvall,Hugo Larsson,Jesper Karlström,Yasin Ayari,Mattias Svanberg,Team Photo,Daniel Svensson,Ken Sema,Roony Bardghji,Dejan Kulusevski,Anthony Elanga,Alexander Isak,Viktor Gyökeres"],
+["TUN","Tunisia","🇹🇳","Bechir Ben Said,Aymen Dahmen,Yan Valery,Montassar Talbi,Yassine Meriah,Ali Abdi,Dylan Bronn,Ellyes Skhiri,Aissa Laidouni,Ferjani Sassi,Mohamed Ali Ben Romdhane,Team Photo,Hannibal Mejbri,Elias Achouri,Elias Saad,Hazem Mastouri,Ismael Gharbi,Sayfallah Ltaief,Naim Sliti"],
+["BEL","Belgium","🇧🇪","Thibaut Courtois,Arthur Theate,Timothy Castagne,Zeno Debast,Brandon Mechele,Maxim De Cuyper,Thomas Meunier,Youri Tielemans,Amadou Onana,Nicolas Raskin,Alexis Saelemaekers,Team Photo,Hans Vanaken,Kevin De Bruyne,Jérémy Doku,Charles De Ketelaere,Leandro Trossard,Loïs Openda,Romelu Lukaku"],
+["EGY","Egypt","🇪🇬","Mohamed El Shenawy,Mohamed Hany,Mohamed Hamdy,Yasser Ibrahim,Khaled Sobhi,Ramy Rabia,Hossam Abdelmaguid,Ahmed Fatouh,Marwan Attia,Zizo,Hamdy Fathy,Team Photo,Mohamed Lasheen,Emam Ashour,Osama Faisal,Mohamed Salah,Mostafa Mohamed,Trezeguet,Omar Marmoush"],
+["IRN","Iran","🇮🇷","Alireza Beiranvand,Morteza Pouraliganji,Ehsan Hajsafi,Milad Mohammadi,Shojae Khalilzadeh,Ramin Rezaeian,Hossein Kanaani,Sadegh Moharrami,Saleh Hardani,Saeed Ezatolahi,Saman Ghoddos,Team Photo,Omid Noorafkan,Roozbeh Cheshmi,Mohammad Mohebi,Sardar Azmoun,Mehdi Taremi,Alireza Jahanbakhsh,Ali Gholizadeh"],
+["NZL","New Zealand","🇳🇿","Max Crocombe Payne,Alex Paulsen,Michael Boxall,Liberato Cacace,Tim Payne,Tyler Bindon,Francis de Vries,Finn Surman,Joe Bell,Sarpreet Singh,Ryan Thomas,Team Photo,Matthew Garbett,Marko Stamenić,Ben Old,Chris Wood,Elijah Just,Callum McCowatt,Kosta Barbarouses"],
+["ESP","Spain","🇪🇸","Unai Simon,Robin Le Normand,Aymeric Laporte,Dean Huijsen,Pedro Porro,Dani Carvajal,Marc Cucurella,Martín Zubimendi,Rodri,Pedri,Fabian Ruiz,Team Photo,Mikel Merino,Lamine Yamal,Dani Olmo,Nico Williams,Ferran Torres,Álvaro Morata,Mikel Oyarzabal"],
+["CPV","Cape Verde","🇨🇻","Vozinha,Logan Costa,Pico,Diney,Steven Moreira,Wagner Pina,Joao Paulo,Yannick Semedo,Kevin Pina,Patrick Andrade,Jamiro Monteiro,Team Photo,Deroy Duarte,Garry Rodrigues,Jovane Cabral,Ryan Mendes,Dailon Livramento,Willy Semedo,Bebe"],
+["KSA","Saudi Arabia","🇸🇦","Nawaf Alaqidi,Abdulrahman Al-Sanbi,Saud Abdulhamid,Nawaf Bouwashl,Jihad Thakri,Moteb Al-Harbi,Hassan Altambakti,Musab Aljuwayr,Ziyad Aljohani,Abdullah Alkhaibari,Nasser Aldawsari,Team Photo,Saleh Abu Alshamat,Marwan Alsahafi,Salem Aldawsari,Abdulrahman Al-Aboud,Feras Akbrikan,Saleh Alshehri,Abdullah Al-Hamdan"],
+["URU","Uruguay","🇺🇾","Sergio Rochet,Santiago Mele,Ronald Araujo,José María Giménez,Sebastian Caceres,Mathias Olivera,Guillermo Varela,Nahitan Nandez,Federico Valverde,Giorgian De Arrascaeta,Rodrigo Bentancur,Team Photo,Manuel Ugarte,Nicolás de la Cruz,Maxi Araujo,Darwin Núñez,Federico Viñas,Rodrigo Aguirre,Facundo Pellistri"],
+["FRA","France","🇫🇷","Mike Maignan,Theo Hernandez,William Saliba,Jules Kounde,Ibrahima Konate,Dayot Upamecano,Lucas Digne,Aurélien Tchouaméni,Eduardo Camavinga,Manu Kone,Adrien Rabiot,Team Photo,Michael Olise,Ousmane Dembele,Bradley Barcola,Désiré Doué,Kingsley Coman,Hugo Ekitike,Kylian Mbappe"],
+["SEN","Senegal","🇸🇳","Edouard Mendy,Yehvann Diouf,Moussa Niakhaté,Abdoulaye Seck,Ismail Jakobs,El Hadji Malick Diouf,Kalidou Koulibaly,Idrissa Gana Gueye,Pape Matar Sarr,Pape Gueye,Habib Diarra,Team Photo,Lamine Camara,Sadio Mane,Ismaïla Sarr,Boulaye Dia,Iliman Ndiaye,Nicolas Jackson,Krepin Diatta"],
+["IRQ","Iraq","🇮🇶","Jalal Hassan,Rebin Sulaka,Hussein Ali,Akam Hashem,Merchas Doski,Zaid Tahseen,Manaf Younis,Zidane Iqbal,Amir Al-Ammari,Ibrahim Bavesh,Ali Jasim,Team Photo,Youssef Amyn,Aimar Sher,Marko Farji,Osama Rashid,Ali Al-Hamadi,Aymen Hussein,Mohanad Ali"],
+["NOR","Norway","🇳🇴","Orjan Nyland,Julian Ryerson,Leo Ostigård,Kristoffer Vassbakk Ajer,Marcus Holmgren Pedersen,David Møller Wolfe,Torbjørn Heggem,Morten Thorsby,Martin Ødegaard,Sander Berge,Andreas Schjelderup,Team Photo,Patrick Berg,Erling Haaland,Alexander Sørloth,Aron Dønnum,Jorgen Strand Larsen,Antonio Nusa,Oscar Bobb"],
+["ARG","Argentina","🇦🇷","Emiliano Martinez,Nahuel Molina,Cristian Romero,Nicolas Otamendi,Nicolas Tagliafico,Leonardo Balerdi,Enzo Fernandez,Alexis Mac Allister,Rodrigo De Paul,Exequiel Palacios,Leandro Paredes,Team Photo,Nico Paz,Franco Mastantuono,Nico Gonzalez,Lionel Messi,Lautaro Martinez,Julian Alvarez,Giuliano Simeone"],
+["ALG","Algeria","🇩🇿","Alexis Guendouz,Ramy Bensebaini,Youcef Atal,Rayan Aït-Nouri,Mohamed Amine Tougai,Aïssa Mandi,Ismael Bennacer,Houssem Aquar,Hicham Boudaoui,Ramiz Zerrouki,Nabil Bentalab,Team Photo,Farés Chaibi,Riyad Mahrez,Said Benrahma,Anis Hadj Moussa,Amine Gouiri,Baghdad Bounedjah,Mohammed Amoura"],
+["AUT","Austria","🇦🇹","Alexander Schlager,Patrick Pentz,David Alaba,Kevin Danso,Philipp Lienhart,Stefan Posch,Phillipp Mwene,Alexander Prass,Xaver Schlager,Marcel Sabitzer,Konrad Laimer,Team Photo,Florian Grillitsch,Nicolas Seiwald,Romano Schmid,Patrick Wimmer,Christoph Baumgartner,Michael Gregoritsch,Marko Arnautović"],
+["JOR","Jordan","🇯🇴","Yazeed Abulaila,Ihsan Haddad,Mohammad Abu Hashish,Yazan Al-Arab,Abdallah Nasib,Saleem Obaid,Mohammad Abualnadi,Ibrahim Saadeh,Nizar Al-Rashdan,Noor Al-Rawabdeh,Mohannad Abu Taha,Team Photo,Amer Jamous,Musa Al-Taamari,Yazan Al-Naimat,Mahmoud Al-Mardi,Ali Olwan,Mohammad Abu Zrayq,Ibrahim Sabra"],
+["POR","Portugal","🇵🇹","Diogo Costa,Jose Sa,Ruben Dias,João Cancelo,Diogo Dalot,Nuno Mendes,Gonçalo Inácio,Bernardo Silva,Bruno Fernandes,Ruben Neves,Vitinha,Team Photo,João Neves,Cristiano Ronaldo,Francisco Trincao,João Felix,Gonçalo Ramos,Pedro Neto,Rafael Leão"],
+["COD","Congo DR","🇨🇩","Lionel Mpasi,Aaron Wan-Bissaka,Axel Tuanzebe,Arthur Masuaku,Chancel Mbemba,Joris Kayembe,Charles Pickel,Ngal'ayel Mukau,Edo Kayembe,Samuel Moutoussamy,Noah Sadiki,Team Photo,Théo Bongonda,Meschak Elia,Yoane Wissa,Brian Cipenga,Fiston Mayele,Cédric Bakambu,Nathanaël Mbuku"],
+["UZB","Uzbekistan","🇺🇿","Utkir Yusupov,Farrukh Savfiev,Sherzod Nasrullaev,Umar Eshmurodov,Husniddin Aliqulov,Rustamjon Ashurmatov,Khojiakbar Alijonov,Abdukodir Khusanov,Odiljon Hamrobekov,Otabek Shukurov,Jamshid Iskanderov,Team Photo,Azizbek Turgunboev,Khojimat Erkinov,Eldor Shomurodov,Oston Urunov,Jaloliddin Masharipov,Igor Sergeev,Abbosbek Fayzullaev"],
+["COL","Colombia","🇨🇴","Camilo Vargas,David Ospina,Dávinson Sánchez,Yerry Mina,Daniel Munoz,Johan Mojica,Jhon Lucumí,Santiago Arias,Jefferson Lerma,Kevin Castaño,Richard Rios,Team Photo,James Rodriguez,Juan Fernando Quintero,Jorge Carrascal,Jon Arias,Jhon Cordova,Luis Suarez,Luis Diaz"],
+["ENG","England","🏴󠁧󠁢󠁥󠁮󠁧󠁿","Jordan Pickford,John Stones,Marc Guéhi,Ezri Konsa,Trent Alexander-Arnold,Reece James,Dan Burn,Jordan Henderson,Declan Rice,Jude Bellingham,Cole Palmer,Team Photo,Morgan Rogers,Anthony Gordon,Phil Foden,Bukayo Saka,Harry Kane,Marcus Rashford,Ollie Watkins"],
+["CRO","Croatia","🇭🇷","Dominik Livaković,Duje Caleta-Car,Josko Gvardiol,Josip Stanišić,Luka Vušković,Josip Sutalo,Kristijan Jakic,Luka Modrić,Mateo Kovacic,Martin Baturina,Lovro Majer,Team Photo,Mario Pasalic,Petar Sucic,Ivan Perišić,Marco Pasalic,Ante Budimir,Andrej Kramarić,Franjo Ivanovic"],
+["GHA","Ghana","🇬🇭","Lawrence Ati Zigi,Tariq Lamptey,Mohammed Salisu,Alidu Seidu,Alexander Djiku,Gideon Mensah,Caleb Yirenkyi,Abdul Issahaku Fatawu,Thomas Partey,Salis Abdul Samed,Kamaldeen Sulemana,Team Photo,Mohammed Kudus,Inaki Williams,Jordan Ayew,Andrew Ayew,Joseph Paintsil,Osman Bukari,Antoine Semenyo"],
+["PAN","Panama","🇵🇦","Orlando Mosquera,Luis Mejia,Fidel Escobar,Andres Andrade,Michael Amir Murillo,Eric Davis,Jose Cordoba,Cesar Blackman,Cristian Martinez,Aníbal Godoy,Adalberto Carrasquilla,Team Photo,Édgar Bárcenas,Carlos Harvey,Ismael Díaz,Jose Fajardo,Cecilio Waterman,Jose Luiz Rodriguez,Alberto Quintero"],
 ];
 
 const ALL = [];
-INTRO.forEach(s => ALL.push({...s,section:"Introdução",code:"INT",special:false}));
-MUSEUM.forEach(s => ALL.push({...s,section:"Museu FIFA",code:"FWC",special:false}));
-TEAMS.forEach(t => {
-  ALL.push({id:`${t.code}1`,name:`${t.flag} ${t.name} — Emblema FOIL`,section:t.name,code:t.code,special:true});
-  t.players.forEach((p,i) => {
-    const isPhoto = p==="Team Photo";
-    ALL.push({id:`${t.code}${i+2}`,name:`${t.flag} ${t.name} — ${isPhoto?"📸 Foto de Equipa":p}`,section:t.name,code:t.code,special:isPhoto});
-  });
+const TEAM_LIST = [{code:'FWC',name:'FIFA World Cup',flag:'🏆'}];
+SPECIAL.forEach(s => ALL.push({id:s[0],name:s[1],team:'FWC',flag:'🏆',foil:true}));
+T.forEach(t => {
+  const [code,name,flag,playersStr] = t;
+  const players = playersStr.split(',');
+  TEAM_LIST.push({code,name,flag});
+  ALL.push({id:code+'1',name:'Team Logo',team:code,flag,foil:true});
+  players.forEach((p,i) => ALL.push({id:code+(i+2),name:p,team:code,flag,foil:false}));
 });
+TEAM_LIST.push({code:'HIST',name:'World Cup History',flag:'📜'});
+HISTORY.forEach(h => ALL.push({id:h[0],name:h[1],team:'HIST',flag:'📜',foil:true}));
 const TOTAL = ALL.length;
 
-// PIN hash simples (não precisa ser criptográfico para este uso)
+// ═══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════════
+let collections = [];
+let currentColl = null;
+let currentTab = 'teams';
+let editUnlocked = false;
+let pendingPinAction = null;
+let pendingCollIndex = null;
+
 function hashPin(pin) {
   let h = 0;
-  for (let c of String(pin)) h = ((h << 5) - h) + c.charCodeAt(0);
-  return (h >>> 0).toString(16);
+  for (let i = 0; i < pin.length; i++) { h = ((h << 5) - h) + pin.charCodeAt(i); h |= 0; }
+  return 'ph_' + Math.abs(h).toString(36);
 }
 
-// ─── STATE ────────────────────────────────────────────────────────────────────
-let colecoes = [];           // lista carregada do Supabase
-let colAtual = null;         // {id, nome, pin_hash}
-let colCromos = {};          // {cromo_id: quantidade}
-let allColCromos = {};       // {colecao_id: {cromo_id: quantidade}}
-let modoEdicao = false;
-let currentTab = "colecao";
-let pinBuffer = { nova: "", enter: "" };
-let pendingColecaoId = null;
+async function loadCollections() {
+  try {
+    const cols = await sb.getColecoes();
+    if (!Array.isArray(cols)) throw new Error('Bad response');
+    const allCromos = await sb.getAllCromos();
+    const cromosByCol = {};
+    if (Array.isArray(allCromos)) {
+      allCromos.forEach(c => {
+        if (!cromosByCol[c.colecao_id]) cromosByCol[c.colecao_id] = {};
+        cromosByCol[c.colecao_id][c.cromo_id] = c.quantidade;
+      });
+    }
+    collections = cols.map(c => ({
+      id: c.id, nome: c.nome, pin_hash: c.pin_hash,
+      stickers: cromosByCol[c.id] || {}, criado_em: c.criado_em,
+    }));
+  } catch(e) {
+    console.error('Load error:', e);
+    try { const raw = localStorage.getItem('panini2026'); if (raw) collections = JSON.parse(raw); } catch {}
+  }
+}
 
-// ─── UI HELPERS ───────────────────────────────────────────────────────────────
+function saveLocal() { localStorage.setItem('panini2026', JSON.stringify(collections)); }
+
+let saveQueue = [];
+let saveTimer = null;
+function queueSave(colecaoId, cromoId, quantidade) {
+  saveQueue.push({ colecaoId, cromoId, quantidade });
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(flushSaves, 600);
+}
+async function flushSaves() {
+  const batch = [...saveQueue]; saveQueue = [];
+  for (const { colecaoId, cromoId, quantidade } of batch) {
+    try { await sb.upsertCromo(colecaoId, cromoId, quantidade); } catch(e) { console.error(e); }
+  }
+  saveLocal();
+}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// SCREEN MANAGEMENT
+// ═══════════════════════════════════════════════════════════════════════════════
 function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  document.getElementById("screen-"+id).classList.add("active");
-}
-function showLoading(txt="A carregar...") {
-  document.getElementById("loading-text").textContent = txt;
-  document.getElementById("loading").classList.add("show");
-}
-function hideLoading() { document.getElementById("loading").classList.remove("show"); }
-function toast(msg, error=false) {
-  const t = document.getElementById("toast");
-  t.textContent = msg; t.className = "toast show" + (error?" error":"");
-  setTimeout(() => t.className = "toast", 2500);
-}
-function fecharModal(id) { document.getElementById(id).classList.remove("open"); }
-function abrirModal(id) { document.getElementById(id).classList.add("open"); }
-
-// ─── PIN PAD ──────────────────────────────────────────────────────────────────
-function pinKey(ctx, val) {
-  const buf = pinBuffer[ctx] || "";
-  if (val === "clr") { pinBuffer[ctx] = ""; }
-  else if (val === "del") { pinBuffer[ctx] = buf.slice(0,-1); }
-  else if (buf.length < 4) { pinBuffer[ctx] = buf + val; }
-  updatePinDisplay(ctx);
-  if (ctx === "enter" && pinBuffer[ctx].length === 4) setTimeout(() => verificarPin(), 200);
-}
-function updatePinDisplay(ctx) {
-  const buf = pinBuffer[ctx] || "";
-  const prefix = ctx === "nova" ? "ndot" : "pdot";
-  for (let i=0; i<4; i++) {
-    document.getElementById(prefix+i).classList.toggle("filled", i < buf.length);
-  }
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-// ─── NOVA COLEÇÃO ─────────────────────────────────────────────────────────────
-function abrirModalNova() {
-  pinBuffer.nova = "";
-  document.getElementById("nova-nome").value = "";
-  document.getElementById("nova-error").textContent = "";
-  updatePinDisplay("nova");
-  abrirModal("modal-nova");
-  setTimeout(() => document.getElementById("nova-nome").focus(), 300);
-}
-
-async function criarColecao() {
-  const nome = document.getElementById("nova-nome").value.trim();
-  const pin = pinBuffer.nova;
-  const err = document.getElementById("nova-error");
-  if (!nome) { err.textContent = "Escreve um nome."; return; }
-  if (pin.length !== 4) { err.textContent = "O PIN tem de ter 4 dígitos."; return; }
-  if (colecoes.find(c => c.nome.toLowerCase() === nome.toLowerCase())) {
-    err.textContent = "Já existe uma coleção com esse nome."; return;
-  }
-  showLoading("A criar coleção...");
-  fecharModal("modal-nova");
-  try {
-    const res = await api("POST", "colecoes", { nome, pin_hash: hashPin(pin) });
-    const nova = Array.isArray(res) ? res[0] : res;
-    colecoes.push(nova);
-    renderHome();
-    toast("✅ Coleção criada!");
-  } catch(e) {
-    toast("Erro ao criar coleção", true);
-  }
-  hideLoading();
-}
-
-// ─── ABRIR COLEÇÃO ────────────────────────────────────────────────────────────
-function abrirColecaoCard(colId) {
-  const col = colecoes.find(c => c.id === colId);
-  if (!col) return;
-  pendingColecaoId = colId;
-  pinBuffer.enter = "";
-  updatePinDisplay("enter");
-  document.getElementById("pin-nome-span").textContent = col.nome;
-  document.getElementById("pin-error").textContent = "";
-  document.getElementById("pin-modal-title").textContent = `Coleção de ${col.nome}`;
-  abrirModal("modal-pin");
-}
-
-function verificarPin() {
-  const col = colecoes.find(c => c.id === pendingColecaoId);
-  if (!col) return;
-  if (hashPin(pinBuffer.enter) === col.pin_hash) {
-    fecharModal("modal-pin");
-    abrirColecao(pendingColecaoId, true);
-  } else {
-    document.getElementById("pin-error").textContent = "PIN incorreto. Tenta outra vez.";
-    pinBuffer.enter = "";
-    updatePinDisplay("enter");
-  }
-}
-
-function abrirColecaoReadonly() {
-  fecharModal("modal-pin");
-  abrirColecao(pendingColecaoId, false);
-}
-
-function pedirPin() {
-  pinBuffer.enter = "";
-  updatePinDisplay("enter");
-  document.getElementById("pin-nome-span").textContent = colAtual.nome;
-  document.getElementById("pin-error").textContent = "";
-  abrirModal("modal-pin");
-}
-
-async function abrirColecao(colId, editar) {
-  const col = colecoes.find(c => c.id === colId);
-  colAtual = col;
-  modoEdicao = editar;
-  showLoading("A carregar cromos...");
-  try {
-    // Carregar cromos desta coleção
-    const rows = await api("GET", `cromos?colecao_id=eq.${colId}&select=cromo_id,quantidade`);
-    colCromos = {};
-    (rows||[]).forEach(r => { colCromos[r.cromo_id] = r.quantidade; });
-
-    // Carregar cromos de todas as outras coleções (para trocas)
-    allColCromos = {};
-    for (const c of colecoes) {
-      if (c.id === colId) continue;
-      const r2 = await api("GET", `cromos?colecao_id=eq.${c.id}&select=cromo_id,quantidade`);
-      allColCromos[c.id] = {};
-      (r2||[]).forEach(r => { allColCromos[c.id][r.cromo_id] = r.quantidade; });
-    }
-
-    // Montar select de equipas
-    const sel = document.getElementById("col-select");
-    sel.innerHTML = "";
-    ["Todos","Introdução","Museu FIFA",...TEAMS.map(t=>t.name)].forEach(s => {
-      const o = document.createElement("option"); o.value=s; o.textContent=s; sel.appendChild(o);
+function setupPinInputs(container) {
+  const dots = container.querySelectorAll('.pin-dot');
+  dots.forEach((d, i) => {
+    d.value = '';
+    d.addEventListener('input', () => {
+      d.value = d.value.replace(/[^0-9]/g, '');
+      if (d.value && i < 3) dots[i + 1].focus();
     });
-
-    document.getElementById("col-title").textContent = col.nome;
-    const badge = document.getElementById("col-mode-badge");
-    if (editar) {
-      badge.textContent = "✏️ A editar"; badge.style.background="rgba(0,230,118,0.15)"; badge.style.color="var(--green)";
-      document.getElementById("btn-editar-col").style.display = "none";
-    } else {
-      badge.textContent = "👁 Só ler"; badge.style.background="rgba(255,255,255,0.08)"; badge.style.color="var(--text2)";
-      document.getElementById("btn-editar-col").style.display = "block";
-    }
-
-    currentTab = "colecao";
-    document.querySelectorAll(".col-nav-btn").forEach((b,i) => b.classList.toggle("active", i===0));
-    showTab("colecao");
-    showScreen("colecao");
-    renderList();
-    updateProgress();
-  } catch(e) {
-    toast("Erro ao carregar coleção", true);
-  }
-  hideLoading();
-}
-
-function voltarHome() { showScreen("home"); renderHome(); }
-
-// ─── TABS ─────────────────────────────────────────────────────────────────────
-function mudarTab(tab, btn) {
-  currentTab = tab;
-  document.querySelectorAll(".col-nav-btn").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-  showTab(tab);
-}
-
-function showTab(tab) {
-  const isStats = tab === "resumo";
-  const isTrocas = tab === "trocas";
-  const isList = !isStats && !isTrocas;
-  document.getElementById("tab-list-wrap").style.display = isList ? "flex" : "none";
-  document.getElementById("tab-trocas-wrap").style.display = isTrocas ? "flex" : "none";
-  document.getElementById("tab-stats-wrap").style.display = isStats ? "flex" : "none";
-  if (isList) renderList();
-  if (isStats) renderStats();
-  if (isTrocas) renderTrocas();
-}
-
-// ─── RENDER LIST ──────────────────────────────────────────────────────────────
-function renderList() {
-  const q = (document.getElementById("col-search").value||"").toLowerCase();
-  const sec = document.getElementById("col-select").value || "Todos";
-  let list = ALL;
-  if (currentTab === "falta") list = list.filter(s => !(colCromos[s.id]>=1));
-  if (currentTab === "repetidos") list = list.filter(s => (colCromos[s.id]||0)>1);
-  if (sec !== "Todos") list = list.filter(s => s.section === sec);
-  if (q) list = list.filter(s => s.name.toLowerCase().includes(q)||s.id.toLowerCase().includes(q));
-
-  const totalDups = ALL.reduce((a,s) => a+Math.max(0,(colCromos[s.id]||0)-1),0);
-  const owned = ALL.filter(s=>(colCromos[s.id]||0)>=1).length;
-  const st = document.getElementById("col-status");
-  if (currentTab==="colecao") st.textContent=`${list.length} cromos • ${owned}/${TOTAL} obtidos`;
-  else if (currentTab==="falta") st.textContent=`❌ ${list.length} cromos em falta`;
-  else st.textContent=`🔁 ${list.length} com repetidos (${totalDups} para trocar)`;
-
-  const container = document.getElementById("col-list");
-  if (list.length===0) { container.innerHTML=`<div class="empty-list">${currentTab==="falta"?"🎉 Nenhum cromo em falta!":currentTab==="repetidos"?"Nenhum repetido.":"Nenhum resultado."}</div>`; return; }
-
-  const ro = !modoEdicao;
-  const frag = document.createDocumentFragment();
-  list.forEach(s => {
-    const cnt = colCromos[s.id]||0;
-    const owned = cnt>=1;
-    const div = document.createElement("div");
-    div.className = "sticker-row"+(owned?" owned":"")+(ro?" readonly":"");
-    div.innerHTML = `
-      <div class="s-id ${s.special?"special":(owned?"owned":"")}">${s.id}</div>
-      <div class="s-name" onclick="${ro?"":"toggle('"+s.id+"')"}">${s.name}${cnt>1?`<span class="s-dup">×${cnt}</span>`:""}</div>
-      ${ro ? `<div style="font-size:12px;color:var(--text2);min-width:22px;text-align:center">${cnt||""}</div>` :
-        `<div class="s-controls">
-          <button class="s-btn" onclick="adj('${s.id}',-1)">−</button>
-          <div class="s-count">${cnt}</div>
-          <button class="s-btn" onclick="adj('${s.id}',1)">+</button>
-        </div>`}`;
-    frag.appendChild(div);
+    d.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !d.value && i > 0) dots[i - 1].focus();
+    });
   });
-  container.innerHTML=""; container.appendChild(frag);
+  setTimeout(() => dots[0].focus(), 100);
 }
 
-// ─── CRUD CROMOS ──────────────────────────────────────────────────────────────
-async function toggle(id) {
-  const cur = colCromos[id]||0;
-  await setCount(id, cur>=1?0:1);
+function getPinFromContainer(container) {
+  return Array.from(container.querySelectorAll('.pin-dot')).map(d => d.value).join('');
 }
 
-async function adj(id, delta) {
-  const cur = colCromos[id]||0;
-  await setCount(id, Math.max(0,cur+delta));
+function closeModals() {
+  document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
 }
 
-async function setCount(id, qty) {
-  const old = colCromos[id]||0;
-  // Optimistic update
-  if (qty===0) delete colCromos[id]; else colCromos[id]=qty;
-  renderList(); updateProgress();
-  try {
-    if (qty===0) {
-      await api("DELETE", `cromos?colecao_id=eq.${colAtual.id}&cromo_id=eq.${id}`);
-    } else if (old===0) {
-      await api("POST", "cromos", {colecao_id:colAtual.id, cromo_id:id, quantidade:qty});
-    } else {
-      await api("PATCH", `cromos?colecao_id=eq.${colAtual.id}&cromo_id=eq.${id}`, {quantidade:qty, atualizado_em: new Date().toISOString()});
-    }
-  } catch(e) {
-    // Revert
-    if (old===0) delete colCromos[id]; else colCromos[id]=old;
-    renderList(); updateProgress();
-    toast("Erro ao guardar", true);
-  }
+function showNewCollModal() {
+  const modal = document.getElementById('modal-new-coll');
+  modal.classList.add('active');
+  document.getElementById('new-coll-name').value = '';
+  setupPinInputs(modal);
 }
 
-function updateProgress() {
-  const owned = ALL.filter(s=>(colCromos[s.id]||0)>=1).length;
-  const pct = Math.round((owned/TOTAL)*100);
-  document.getElementById("col-prog-fill").style.width=pct+"%";
-}
-
-// ─── TROCAS ───────────────────────────────────────────────────────────────────
-function renderTrocas() {
-  const container = document.getElementById("trocas-content");
-  const outrasColecoes = colecoes.filter(c=>c.id!==colAtual.id);
-  if (outrasColecoes.length===0) {
-    container.innerHTML=`<div class="no-trocas">🤷 Ainda não há outras coleções para trocar.<br><br>Quando os teus amigos criarem as delas, aqui verás os matches!</div>`;
+function showEditCollModal() {
+  if (!editUnlocked) {
+    pendingPinAction = 'edit';
+    showPinModal('Editar Coleção', 'PIN de 4 dígitos para editar');
     return;
   }
+  const modal = document.getElementById('modal-edit-coll');
+  modal.classList.add('active');
+  document.getElementById('edit-coll-name').value = collections[currentColl].nome;
+}
 
-  const meusFalta = ALL.filter(s=>!(colCromos[s.id]>=1));
-  const meusRep = ALL.filter(s=>(colCromos[s.id]||0)>1);
+function showPinModal(title, sub) {
+  const modal = document.getElementById('modal-pin');
+  document.getElementById('pin-modal-title').textContent = title;
+  document.getElementById('pin-modal-sub').textContent = sub;
+  document.getElementById('pin-error').style.display = 'none';
+  modal.classList.add('active');
+  setupPinInputs(document.getElementById('pin-entry'));
+}
 
-  let html = "";
-
-  // MATCHES PERFEITOS
-  const matches = [];
-  for (const col of outrasColecoes) {
-    const deles = allColCromos[col.id]||{};
-    const delesRep = ALL.filter(s=>(deles[s.id]||0)>1);
-    const delesFalta = ALL.filter(s=>!(deles[s.id]>=1));
-    // Eu tenho repetido E eles precisam; eles têm repetido E eu preciso
-    const euDou = meusRep.filter(s => delesFalta.find(f=>f.id===s.id));
-    const elesDao = delesRep.filter(s => meusFalta.find(f=>f.id===s.id));
-    if (euDou.length>0 && elesDao.length>0) {
-      matches.push({col, euDou, elesDao});
-    }
+function submitPin() {
+  const pin = getPinFromContainer(document.getElementById('pin-entry'));
+  if (pin.length !== 4) return;
+  const idx = pendingPinAction === 'open' ? pendingCollIndex : currentColl;
+  const coll = collections[idx];
+  if (hashPin(pin) !== coll.pin_hash) {
+    document.getElementById('pin-error').style.display = 'block';
+    setupPinInputs(document.getElementById('pin-entry'));
+    return;
   }
+  closeModals();
+  editUnlocked = true;
+  if (pendingPinAction === 'open') { currentColl = idx; openCollection(); }
+  else if (pendingPinAction === 'edit') { showEditCollModal(); }
+  else { refreshCurrentView(); }
+}
 
-  if (matches.length>0) {
-    html += `<div class="troca-section"><div class="troca-header">🤝 Matches Perfeitos</div>`;
-    matches.forEach(m => {
-      html += `<div class="match-card">
-        <div class="match-title">✅ ${colAtual.nome} ↔ ${m.col.nome}</div>
-        <div class="match-detail">
-          Podes dar: ${m.euDou.slice(0,5).map(s=>`<span class="offer-tag">${s.id}</span>`).join("")}${m.euDou.length>5?`<span class="offer-tag">+${m.euDou.length-5}</span>`:""}<br>
-          Recebes: ${m.elesDao.slice(0,5).map(s=>`<span class="offer-tag">${s.id}</span>`).join("")}${m.elesDao.length>5?`<span class="offer-tag">+${m.elesDao.length-5}</span>`:""}
+async function createCollection() {
+  const nome = document.getElementById('new-coll-name').value.trim();
+  const modal = document.getElementById('modal-new-coll');
+  const pin = getPinFromContainer(modal);
+  if (!nome || pin.length !== 4) return;
+  const pinHash = hashPin(pin);
+  try {
+    const result = await sb.insertColecao(nome, pinHash);
+    if (Array.isArray(result) && result[0]) {
+      collections.push({ id: result[0].id, nome, pin_hash: pinHash, stickers: {}, criado_em: result[0].criado_em });
+    } else {
+      collections.push({ id: Date.now().toString(), nome, pin_hash: pinHash, stickers: {}, criado_em: new Date().toISOString() });
+    }
+  } catch {
+    collections.push({ id: Date.now().toString(), nome, pin_hash: pinHash, stickers: {}, criado_em: new Date().toISOString() });
+  }
+  saveLocal();
+  closeModals();
+  renderCollections();
+}
+
+async function saveCollEdit() {
+  const nome = document.getElementById('edit-coll-name').value.trim();
+  if (!nome) return;
+  collections[currentColl].nome = nome;
+  try { await sb.updateColecao(collections[currentColl].id, { nome }); } catch {}
+  saveLocal();
+  closeModals();
+  document.getElementById('app-title').textContent = nome;
+}
+
+function confirmDeleteColl() {
+  closeModals();
+  document.getElementById('modal-confirm-delete').classList.add('active');
+}
+
+async function deleteCollection() {
+  const id = collections[currentColl].id;
+  collections.splice(currentColl, 1);
+  try { await sb.deleteColecao(id); } catch {}
+  saveLocal();
+  currentColl = null; editUnlocked = false;
+  closeModals();
+  showScreen('screen-collections');
+  renderCollections();
+}
+
+// ── COLLECTIONS LIST ─────────────────────────────────────────────────────────
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function renderCollections() {
+  const list = document.getElementById('coll-list');
+  if (collections.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Nenhuma coleção ainda.<br>Cria uma para começar!</p></div>';
+    return;
+  }
+  list.innerHTML = collections.map((c, i) => {
+    const owned = Object.keys(c.stickers).length;
+    const pct = Math.round((owned / TOTAL) * 100);
+    return `
+      <div class="coll-card" onclick="requestOpenColl(${i})">
+        <div class="coll-avatar">⚽</div>
+        <div class="coll-info">
+          <div class="coll-name">${esc(c.nome)}</div>
+          <div class="coll-stats">${owned}/${TOTAL} cromos · ${pct}%</div>
+          <div class="coll-progress"><div class="coll-progress-bar" style="width:${pct}%"></div></div>
         </div>
+        <div class="coll-arrow">›</div>
       </div>`;
-    });
-    html += `</div>`;
-  }
+  }).join('');
+}
 
-  // O QUE CADA UM TEM DE REPETIDO QUE PRECISAS
-  html += `<div class="troca-section"><div class="troca-header">🎯 Repetidos que precisas</div>`;
-  let algum = false;
-  for (const col of outrasColecoes) {
-    const deles = allColCromos[col.id]||{};
-    const util = ALL.filter(s=>(deles[s.id]||0)>1 && !(colCromos[s.id]>=1));
-    if (util.length>0) {
-      algum = true;
-      html += `<div class="offer-card">
-        <div class="offer-who">📦 ${col.nome} tem ${util.length} repetido(s) que precisas:</div>
-        <div class="offer-stickers">${util.slice(0,10).map(s=>`<span class="offer-tag">${s.id}</span>`).join("")}${util.length>10?`<span class="offer-tag">+${util.length-10} mais</span>`:""}</div>
+function requestOpenColl(idx) {
+  pendingCollIndex = idx;
+  currentColl = idx;
+  editUnlocked = false;
+  openCollection();
+}
+
+function goToCollections() {
+  currentColl = null; editUnlocked = false;
+  showScreen('screen-collections');
+  renderCollections();
+}
+
+function openCollection() {
+  const coll = collections[currentColl];
+  document.getElementById('app-title').textContent = coll.nome;
+  currentTab = 'teams';
+  showScreen('screen-app');
+  updateStats();
+  renderTab();
+}
+
+function updateStats() {
+  const stickers = collections[currentColl].stickers;
+  const owned = Object.keys(stickers).length;
+  const dupes = Object.values(stickers).reduce((s, q) => s + Math.max(0, q - 1), 0);
+  const missing = TOTAL - owned;
+  const pct = Math.round((owned / TOTAL) * 100);
+  document.getElementById('stat-owned').textContent = owned;
+  document.getElementById('stat-missing').textContent = missing;
+  document.getElementById('stat-dupes').textContent = dupes;
+  document.getElementById('stat-progress').style.width = pct + '%';
+  document.getElementById('stat-pct').textContent = pct + '%';
+}
+
+// ── TAB NAVIGATION ───────────────────────────────────────────────────────────
+function switchTab(tab) {
+  if (tab === 'teams' && document.getElementById('screen-team').classList.contains('active')) {
+    showScreen('screen-app');
+  }
+  currentTab = tab;
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  if (tab !== 'teams' || !document.getElementById('screen-team').classList.contains('active')) {
+    showScreen('screen-app');
+  }
+  renderTab();
+}
+
+function renderTab() {
+  const content = document.getElementById('app-content');
+  content.scrollTop = 0;
+  switch (currentTab) {
+    case 'teams': renderTeams(content); break;
+    case 'missing': renderMissing(content); break;
+    case 'dupes': renderDupes(content); break;
+    case 'trades': renderTrades(content); break;
+    case 'search': renderSearch(content); break;
+  }
+}
+
+// ── TEAMS LIST ───────────────────────────────────────────────────────────────
+function renderTeams(container) {
+  const stickers = collections[currentColl].stickers;
+  container.innerHTML = TEAM_LIST.map(t => {
+    const teamStickers = ALL.filter(s => s.team === t.code);
+    const owned = teamStickers.filter(s => stickers[s.id]).length;
+    const total = teamStickers.length;
+    const pct = total ? Math.round((owned / total) * 100) : 0;
+    const complete = owned === total && total > 0;
+    return `
+      <div class="team-row ${complete ? 'team-complete' : ''}" onclick="openTeam('${t.code}')">
+        <span class="team-flag">${t.flag}</span>
+        <div class="team-info">
+          <div class="team-name">${esc(t.name)}</div>
+          <div class="team-prog"><div class="team-prog-bar" style="width:${pct}%"></div></div>
+        </div>
+        <span class="team-count">${owned}/${total}</span>
       </div>`;
+  }).join('');
+}
+
+// ── TEAM DETAIL ──────────────────────────────────────────────────────────────
+let currentTeamCode = null;
+
+function openTeam(code) {
+  currentTeamCode = code;
+  const team = TEAM_LIST.find(t => t.code === code);
+  if (!team) return;
+  document.getElementById('team-flag').textContent = team.flag;
+  document.getElementById('team-title').textContent = team.name;
+  const teamStickers = ALL.filter(s => s.team === code);
+  renderStickerList(document.getElementById('team-stickers'), teamStickers);
+  const stk = collections[currentColl].stickers;
+  const owned = teamStickers.filter(s => stk[s.id]).length;
+  document.getElementById('team-detail-count').textContent = `${owned}/${teamStickers.length}`;
+  showScreen('screen-team');
+}
+
+function goBackFromTeam() {
+  currentTeamCode = null;
+  showScreen('screen-app');
+  renderTab();
+}
+
+// ── STICKER LIST ─────────────────────────────────────────────────────────────
+function renderStickerList(container, stickers, showFlag = false) {
+  const stk = collections[currentColl].stickers;
+  container.innerHTML = stickers.map(s => {
+    const qty = stk[s.id] || 0;
+    const owned = qty > 0;
+    return `
+      <div class="sticker-row">
+        <button class="sticker-check ${owned ? 'on' : 'off'}" onclick="toggleSticker('${s.id}')">
+          ${owned ? '✓' : ''}
+        </button>
+        <span class="sticker-id ${s.foil ? 'foil' : 'normal'}">${s.id}${s.foil ? '<span class="foil-badge">FOIL</span>' : ''}</span>
+        <span class="sticker-name ${owned ? 'owned' : ''}">${esc(s.name)}</span>
+        ${showFlag ? `<span class="sticker-team-flag">${s.flag}</span>` : ''}
+        ${owned ? `
+          <div class="qty-controls">
+            <button class="qty-btn minus" onclick="event.stopPropagation();adjustQty('${s.id}',-1)">−</button>
+            <span class="qty-num ${qty > 1 ? 'dupe' : 'single'}">${qty}</span>
+            <button class="qty-btn plus" onclick="event.stopPropagation();adjustQty('${s.id}',1)">+</button>
+          </div>
+        ` : ''}
+      </div>`;
+  }).join('');
+}
+
+// ── MISSING ──────────────────────────────────────────────────────────────────
+function renderMissing(container) {
+  const stk = collections[currentColl].stickers;
+  const missing = ALL.filter(s => !stk[s.id]);
+  if (missing.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">🏆</div><p>Coleção completa! Parabéns!</p></div>';
+    return;
+  }
+  let html = '', lastTeam = '';
+  missing.forEach(s => {
+    if (s.team !== lastTeam) {
+      const team = TEAM_LIST.find(t => t.code === s.team) || {name: s.team, flag: ''};
+      const teamMissing = missing.filter(x => x.team === s.team).length;
+      html += `<div class="page-header"><span class="page-title">${team.flag} ${esc(team.name)}</span><span class="page-count">${teamMissing} em falta</span></div>`;
+      lastTeam = s.team;
     }
-  }
-  if (!algum) html += `<div class="no-trocas" style="padding:16px">Nenhum repetido útil de momento.</div>`;
-  html += `</div>`;
-
-  // OS TEUS REPETIDOS QUE OS OUTROS PRECISAM
-  html += `<div class="troca-section"><div class="troca-header">🎁 Os teus repetidos que os outros precisam</div>`;
-  let algum2 = false;
-  for (const col of outrasColecoes) {
-    const deles = allColCromos[col.id]||{};
-    const util = meusRep.filter(s=>!(deles[s.id]>=1));
-    if (util.length>0) {
-      algum2 = true;
-      html += `<div class="offer-card">
-        <div class="offer-who">🎁 ${col.nome} precisa de ${util.length} cromo(s) que tens repetido:</div>
-        <div class="offer-stickers">${util.slice(0,10).map(s=>`<span class="offer-tag">${s.id}</span>`).join("")}${util.length>10?`<span class="offer-tag">+${util.length-10} mais</span>`:""}</div>
-      </div>`;
-    }
-  }
-  if (!algum2) html += `<div class="no-trocas" style="padding:16px">Nenhum repetido que os outros precisem.</div>`;
-  html += `</div>`;
-
+    html += `<div class="sticker-row"><button class="sticker-check off" onclick="toggleSticker('${s.id}')"></button><span class="sticker-id ${s.foil ? 'foil' : 'normal'}">${s.id}${s.foil ? '<span class="foil-badge">FOIL</span>' : ''}</span><span class="sticker-name">${esc(s.name)}</span></div>`;
+  });
   container.innerHTML = html;
 }
 
-// ─── STATS ────────────────────────────────────────────────────────────────────
-function renderStats() {
-  const owned = ALL.filter(s=>(colCromos[s.id]||0)>=1).length;
-  const missing = TOTAL-owned;
-  const pct = Math.round((owned/TOTAL)*100);
-  const totalDups = ALL.reduce((a,s)=>a+Math.max(0,(colCromos[s.id]||0)-1),0);
-
-  let html = `
-    <div class="stats-grid">
-      <div class="stat-card" style="background:linear-gradient(135deg,rgba(0,230,118,.1),rgba(0,230,118,.04));border:1px solid rgba(0,230,118,.25)">
-        <div class="stat-num" style="color:var(--green)">${owned}</div>
-        <div class="stat-lbl">Obtidos</div>
-      </div>
-      <div class="stat-card" style="background:linear-gradient(135deg,rgba(255,68,102,.1),rgba(255,68,102,.04));border:1px solid rgba(255,68,102,.25)">
-        <div class="stat-num" style="color:var(--red)">${missing}</div>
-        <div class="stat-lbl">Em Falta</div>
-      </div>
-      <div class="stat-card" style="background:linear-gradient(135deg,rgba(212,175,55,.1),rgba(212,175,55,.04));border:1px solid rgba(212,175,55,.25)">
-        <div class="stat-num" style="color:var(--gold)">${pct}%</div>
-        <div class="stat-lbl">Completo</div>
-      </div>
-      <div class="stat-card" style="background:linear-gradient(135deg,rgba(136,102,255,.1),rgba(136,102,255,.04));border:1px solid rgba(136,102,255,.25)">
-        <div class="stat-num" style="color:var(--purple)">${totalDups}</div>
-        <div class="stat-lbl">P/ Trocar</div>
-      </div>
-    </div>
-    <div style="margin:0 4px 14px">
-      <div class="big-prog-bar"><div class="big-prog-fill" style="width:${pct}%"></div></div>
-      <div style="text-align:center;font-size:12px;color:var(--text2)">${owned} / ${TOTAL} cromos obtidos</div>
-    </div>
-    <div class="section-title">Progresso por Seleção</div>`;
-
-  TEAMS.forEach(t => {
-    const ts = ALL.filter(s=>s.code===t.code);
-    const o = ts.filter(s=>(colCromos[s.id]||0)>=1).length;
-    const p = Math.round((o/ts.length)*100);
-    html += `<div class="team-prog-row">
-      <div class="team-prog-lbl">${t.flag} ${t.name}</div>
-      <div class="team-prog-bar"><div class="team-prog-fill" style="width:${p}%;background:${p===100?"var(--green)":"var(--gold)"}"></div></div>
-      <div class="team-prog-ct" style="color:${p===100?"var(--green)":"var(--text2)"}">${o}/${ts.length}</div>
-    </div>`;
-  });
-
-  document.getElementById("stats-content").innerHTML = html;
-}
-
-// ─── HOME ─────────────────────────────────────────────────────────────────────
-function renderHome() {
-  const container = document.getElementById("colecoes-list");
-  if (colecoes.length===0) {
-    container.innerHTML=`<div class="empty-home"><div class="emoji">📦</div><p>Ainda não há coleções.<br>Cria a primeira!</p></div>`;
+// ── DUPES ────────────────────────────────────────────────────────────────────
+function renderDupes(container) {
+  const stk = collections[currentColl].stickers;
+  const dupes = ALL.filter(s => (stk[s.id] || 0) > 1);
+  if (dupes.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Sem cromos repetidos.</p></div>';
     return;
   }
-  container.innerHTML = colecoes.map(col => {
-    const stickers = col._stickers||{};
-    const owned = ALL.filter(s=>(stickers[s.id]||0)>=1).length;
-    const pct = Math.round((owned/TOTAL)*100);
-    const letter = col.nome.charAt(0).toUpperCase();
-    return `<div class="colecao-card" onclick="abrirColecaoCard('${col.id}')">
-      <div class="colecao-avatar">${letter}</div>
-      <div class="colecao-info">
-        <div class="colecao-nome">${col.nome}</div>
-        <div class="colecao-stats">${owned} / ${TOTAL} cromos • ${pct}%</div>
-        <div class="pct-bar-wrap"><div class="pct-bar" style="width:${pct}%"></div></div>
-      </div>
-      <div class="colecao-pct">${pct}%</div>
-    </div>`;
-  }).join("");
+  const totalDupes = dupes.reduce((s, d) => s + stk[d.id] - 1, 0);
+  let html = `<div class="page-header"><span class="page-title">🔄 Repetidos</span><span class="page-count">${totalDupes} extra</span></div>`;
+  dupes.forEach(s => {
+    const qty = stk[s.id];
+    html += `<div class="sticker-row"><button class="sticker-check on" onclick="toggleSticker('${s.id}')">✓</button><span class="sticker-id ${s.foil ? 'foil' : 'normal'}">${s.id}</span><span class="sticker-name owned">${esc(s.name)}</span><span class="sticker-team-flag">${s.flag}</span><div class="qty-controls"><button class="qty-btn minus" onclick="event.stopPropagation();adjustQty('${s.id}',-1)">−</button><span class="qty-num dupe">${qty}</span><button class="qty-btn plus" onclick="event.stopPropagation();adjustQty('${s.id}',1)">+</button></div></div>`;
+  });
+  container.innerHTML = html;
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
-async function init() {
-  try {
-    const rows = await api("GET", "colecoes?select=id,nome,pin_hash,criado_em&order=criado_em.asc");
-    colecoes = rows||[];
-    // Carregar contagens para o home (simplificado)
-    for (const col of colecoes) {
-      const cr = await api("GET", `cromos?colecao_id=eq.${col.id}&select=cromo_id,quantidade`);
-      col._stickers = {};
-      (cr||[]).forEach(r => col._stickers[r.cromo_id]=r.quantidade);
+// ── SEARCH ───────────────────────────────────────────────────────────────────
+function renderSearch(container) {
+  container.innerHTML = `<div class="search-bar"><input class="search-input" id="search-input" placeholder="Nome, número ou equipa..." oninput="doSearch()" autofocus></div><div id="search-results"><div class="empty-state"><div class="icon">🔍</div><p>Escreve para procurar...</p></div></div>`;
+  setTimeout(() => document.getElementById('search-input')?.focus(), 100);
+}
+
+function doSearch() {
+  const q = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+  const results = document.getElementById('search-results');
+  if (!q) { results.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><p>Escreve para procurar...</p></div>'; return; }
+  const matches = ALL.filter(s =>
+    s.id.toLowerCase().includes(q) || s.name.toLowerCase().includes(q) ||
+    (TEAM_LIST.find(t => t.code === s.team)?.name || '').toLowerCase().includes(q)
+  );
+  if (matches.length === 0) { results.innerHTML = `<div class="empty-state"><div class="icon">🤷</div><p>Nenhum resultado para "${esc(q)}"</p></div>`; return; }
+  renderStickerList(results, matches, true);
+}
+
+// ── TRADES ───────────────────────────────────────────────────────────────────
+function renderTrades(container) {
+  if (collections.length < 2) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">🤝</div><p>Precisa de pelo menos 2 coleções para encontrar trocas.</p></div>';
+    return;
+  }
+  const me = collections[currentColl];
+  const myStk = me.stickers;
+  const myDupeIds = new Set(ALL.filter(s => (myStk[s.id] || 0) > 1).map(s => s.id));
+  const myMissingIds = new Set(ALL.filter(s => !myStk[s.id]).map(s => s.id));
+
+  let html = '<div class="trade-section"><h3>🤝 Trocas possíveis</h3>';
+  let hasMatches = false;
+
+  collections.forEach((other, i) => {
+    if (i === currentColl) return;
+    const otherStk = other.stickers;
+    const theyGiveIGet = ALL.filter(s => (otherStk[s.id] || 0) > 1 && myMissingIds.has(s.id));
+    const iGiveTheyGet = ALL.filter(s => myDupeIds.has(s.id) && !otherStk[s.id]);
+    if (theyGiveIGet.length === 0 && iGiveTheyGet.length === 0) return;
+    hasMatches = true;
+    const matchCount = Math.min(theyGiveIGet.length, iGiveTheyGet.length);
+    html += `<div class="trade-match"><div class="trade-header"><span class="trade-user">⚽ ${esc(other.nome)}</span><span class="trade-badge">${matchCount} troca${matchCount !== 1 ? 's' : ''}</span></div>`;
+    if (iGiveTheyGet.length > 0) {
+      html += `<div style="font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:600">Eu dou (${iGiveTheyGet.length})</div><div class="trade-row">${iGiveTheyGet.slice(0,20).map(s=>`<span class="trade-chip give">${s.id}</span>`).join('')}${iGiveTheyGet.length>20?`<span class="trade-chip give">+${iGiveTheyGet.length-20}</span>`:''}</div>`;
     }
-    renderHome();
-    showScreen("home");
-  } catch(e) {
-    toast("Erro de ligação ao servidor", true);
-    showScreen("home");
+    html += '<div class="trade-divider">↕</div>';
+    if (theyGiveIGet.length > 0) {
+      html += `<div style="font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:600">Eu recebo (${theyGiveIGet.length})</div><div class="trade-row">${theyGiveIGet.slice(0,20).map(s=>`<span class="trade-chip get">${s.id}</span>`).join('')}${theyGiveIGet.length>20?`<span class="trade-chip get">+${theyGiveIGet.length-20}</span>`:''}</div>`;
+    }
+    html += '</div>';
+  });
+
+  if (!hasMatches) html += '<div class="empty-state"><div class="icon">🤷</div><p>Nenhuma troca possível de momento.</p></div>';
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// ── STICKER TOGGLE / QTY ─────────────────────────────────────────────────────
+function toggleSticker(id) {
+  if (!editUnlocked) {
+    pendingPinAction = 'toggle';
+    showPinModal('Editar Cromos', 'PIN de 4 dígitos para editar');
+    return;
+  }
+  const stk = collections[currentColl].stickers;
+  if (stk[id]) { delete stk[id]; queueSave(collections[currentColl].id, id, 0); }
+  else { stk[id] = 1; queueSave(collections[currentColl].id, id, 1); }
+  refreshCurrentView();
+}
+
+function adjustQty(id, delta) {
+  if (!editUnlocked) {
+    pendingPinAction = 'toggle';
+    showPinModal('Editar Cromos', 'PIN de 4 dígitos para editar');
+    return;
+  }
+  const stk = collections[currentColl].stickers;
+  const nv = (stk[id] || 0) + delta;
+  if (nv <= 0) delete stk[id]; else stk[id] = nv;
+  queueSave(collections[currentColl].id, id, Math.max(0, nv));
+  refreshCurrentView();
+}
+
+function refreshCurrentView() {
+  updateStats();
+  if (document.getElementById('screen-team').classList.contains('active') && currentTeamCode) {
+    openTeam(currentTeamCode);
+  } else {
+    renderTab();
   }
 }
 
-setTimeout(init, 1200);
+// ═══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════════
+async function init() {
+  showScreen('splash');
+  await loadCollections();
+  setTimeout(() => { showScreen('screen-collections'); renderCollections(); }, 1200);
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+init();
 </script>
 </body>
 </html>
