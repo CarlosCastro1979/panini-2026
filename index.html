@@ -874,11 +874,28 @@ function renderDupes(container) {
     container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Sem cromos repetidos.</p></div>';
     return;
   }
-  const totalDupes = dupes.reduce((s, d) => s + stk[d.id] - 1, 0);
-  let html = `<div class="page-header"><span class="page-title">🔄 Repetidos</span><span class="page-count">${totalDupes} extra</span></div>`;
+  const totalExtra = dupes.reduce((s, d) => s + stk[d.id] - 1, 0);
+  let html = `<div class="page-header"><span class="page-title">🔄 Repetidos para trocar</span><span class="page-count">${totalExtra} cromos</span></div>`;
+
+  let lastTeam = '';
   dupes.forEach(s => {
-    const qty = stk[s.id];
-    html += `<div class="sticker-row"><button class="sticker-check on" onclick="toggleSticker('${s.id}')">✓</button><span class="sticker-id ${s.foil ? 'foil' : 'normal'}">${s.id}</span><span class="sticker-name owned">${esc(s.name)}</span><span class="sticker-team-flag">${s.flag}</span><div class="qty-controls"><button class="qty-btn minus" onclick="event.stopPropagation();adjustQty('${s.id}',-1)">−</button><span class="qty-num dupe">${qty}</span><button class="qty-btn plus" onclick="event.stopPropagation();adjustQty('${s.id}',1)">+</button></div></div>`;
+    if (s.team !== lastTeam) {
+      const team = TEAM_LIST.find(t => t.code === s.team) || {name: s.team, flag: ''};
+      const teamExtra = dupes.filter(x => x.team === s.team).reduce((sum, d) => sum + stk[d.id] - 1, 0);
+      html += `<div class="page-header" style="margin-top:8px"><span class="page-title">${team.flag} ${esc(team.name)}</span><span class="page-count">${teamExtra} para trocar</span></div>`;
+      lastTeam = s.team;
+    }
+    const extra = stk[s.id] - 1;
+    html += `<div class="sticker-row">
+      <span class="sticker-id ${s.foil ? 'foil' : 'normal'}">${s.id}</span>
+      <span class="sticker-name owned" style="flex:1">${esc(s.name)}</span>
+      ${extra > 1 ? `<span style="font-size:11px;color:var(--red);font-weight:700">×${extra}</span>` : ''}
+      <div class="qty-controls">
+        <button class="qty-btn minus" onclick="event.stopPropagation();adjustQty('${s.id}',-1)">−</button>
+        <span class="qty-num dupe">${stk[s.id]}</span>
+        <button class="qty-btn plus" onclick="event.stopPropagation();adjustQty('${s.id}',1)">+</button>
+      </div>
+    </div>`;
   });
   container.innerHTML = html;
 }
