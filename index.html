@@ -778,23 +778,37 @@ function renderTab() {
 
 // ── TEAMS LIST ───────────────────────────────────────────────────────────────
 function renderTeams(container) {
-  const stickers = collections[currentColl].stickers;
-  container.innerHTML = TEAM_LIST.map(t => {
+  const stk = collections[currentColl].stickers;
+  let html = '';
+  TEAM_LIST.forEach(t => {
     const teamStickers = ALL.filter(s => s.team === t.code);
-    const owned = teamStickers.filter(s => stickers[s.id]).length;
+    const owned = teamStickers.filter(s => stk[s.id]).length;
     const total = teamStickers.length;
-    const pct = total ? Math.round((owned / total) * 100) : 0;
     const complete = owned === total && total > 0;
-    return `
-      <div class="team-row ${complete ? 'team-complete' : ''}" onclick="openTeam('${t.code}')">
-        <span class="team-flag">${t.flag}</span>
-        <div class="team-info">
-          <div class="team-name">${esc(t.name)}</div>
-          <div class="team-prog"><div class="team-prog-bar" style="width:${pct}%"></div></div>
-        </div>
-        <span class="team-count">${owned}/${total}</span>
+    html += `<div class="page-header" style="position:sticky;top:0;z-index:5;background:var(--bg)">
+      <span class="page-title ${complete?'team-complete':''}">${t.flag} ${esc(t.name)}</span>
+      <span class="page-count ${complete?'team-complete':''}">${owned}/${total}</span>
+    </div>`;
+    teamStickers.forEach(s => {
+      const qty = stk[s.id] || 0;
+      const owned = qty > 0;
+      html += `<div class="sticker-row">
+        <button class="sticker-check ${owned ? 'on' : 'off'}" onclick="toggleSticker('${s.id}')">
+          ${owned ? '✓' : ''}
+        </button>
+        <span class="sticker-id ${s.foil ? 'foil' : 'normal'}">${s.id}${s.foil ? '<span class="foil-badge">FOIL</span>' : ''}</span>
+        <span class="sticker-name ${owned ? 'owned' : ''}" style="flex:1">${esc(s.name)}</span>
+        ${owned ? `
+          <div class="qty-controls">
+            <button class="qty-btn minus" onclick="event.stopPropagation();adjustQty('${s.id}',-1)">−</button>
+            <span class="qty-num ${qty > 1 ? 'dupe' : 'single'}">${qty}</span>
+            <button class="qty-btn plus" onclick="event.stopPropagation();adjustQty('${s.id}',1)">+</button>
+          </div>
+        ` : ''}
       </div>`;
-  }).join('');
+    });
+  });
+  container.innerHTML = html;
 }
 
 // ── TEAM DETAIL ──────────────────────────────────────────────────────────────
@@ -868,33 +882,34 @@ function renderMissing(container) {
 
 // ── DUPES ────────────────────────────────────────────────────────────────────
 function renderDupes(container) {
+  if (liveTradeActive) { renderLiveTrade(container); return; }
   const stk = collections[currentColl].stickers;
   const dupes = ALL.filter(s => (stk[s.id] || 0) > 1);
   if (dupes.length === 0) {
     container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Sem cromos repetidos.</p></div>';
     return;
   }
-  // Build flat list: each extra copy is one line
-  const flatList = [];
-  dupes.forEach(s => {
-    const extra = stk[s.id] - 1;
-    for (let i = 0; i < extra; i++) flatList.push(s);
-  });
-
-  let html = `<div class="page-header"><span class="page-title">🔄 Repetidos na mão</span><span class="page-count">${flatList.length} cromos</span></div>`;
+  const totalExtra = dupes.reduce((s, d) => s + stk[d.id] - 1, 0);
+  let html = `<div class="page-header"><span class="page-title">🔄 Repetidos na mão</span><span class="page-count">${totalExtra} cromos</span></div>`;
   html += `<div style="padding:0 14px 10px"><button class="trade-proposal-btn" onclick="openLiveTrade()">🤝 Trocar presencialmente</button></div>`;
 
   let lastTeam = '';
-  flatList.forEach(s => {
+  dupes.forEach(s => {
     if (s.team !== lastTeam) {
       const team = TEAM_LIST.find(t => t.code === s.team) || {name: s.team, flag: ''};
-      const teamCount = flatList.filter(x => x.team === s.team).length;
-      html += `<div class="page-header" style="margin-top:8px"><span class="page-title">${team.flag} ${esc(team.name)}</span><span class="page-count">${teamCount}</span></div>`;
+      const teamExtra = dupes.filter(x => x.team === s.team).reduce((sum, d) => sum + stk[d.id] - 1, 0);
+      html += `<div class="page-header" style="margin-top:8px"><span class="page-title">${team.flag} ${esc(team.name)}</span><span class="page-count">${teamExtra}</span></div>`;
       lastTeam = s.team;
     }
+    const extra = stk[s.id] - 1;
     html += `<div class="sticker-row">
       <span class="sticker-id ${s.foil ? 'foil' : 'normal'}">${s.id}</span>
       <span class="sticker-name owned" style="flex:1">${esc(s.name)}</span>
+      <div class="qty-controls">
+        <button class="qty-btn minus" onclick="event.stopPropagation();adjustQty('${s.id}',-1)">−</button>
+        <span class="qty-num dupe">${extra}</span>
+        <button class="qty-btn plus" onclick="event.stopPropagation();adjustQty('${s.id}',1)">+</button>
+      </div>
     </div>`;
   });
   container.innerHTML = html;
@@ -902,14 +917,21 @@ function renderDupes(container) {
 
 // ── LIVE TRADE (presencial) ──────────────────────────────────────────────────
 let liveTradeActive = false;
-let liveGive = new Set(); // sticker IDs I'm giving
-let liveGet = [];  // sticker IDs I'm receiving (typed in)
+let liveGive = new Set();
+let liveGet = new Set();
+let liveTradeTab = 'give';
 
 function openLiveTrade() {
+  if (!editUnlocked) {
+    pendingPinAction = 'toggle';
+    showPinModal('Trocar Presencialmente', 'PIN de 4 dígitos para editar');
+    return;
+  }
   liveTradeActive = true;
   liveGive = new Set();
-  liveGet = [];
-  renderLiveTrade();
+  liveGet = new Set();
+  liveTradeTab = 'give';
+  renderTab();
 }
 
 function closeLiveTrade() {
@@ -917,26 +939,16 @@ function closeLiveTrade() {
   renderTab();
 }
 
-function renderLiveTrade() {
-  const container = document.getElementById('app-content');
+function renderLiveTrade(container) {
   const stk = collections[currentColl].stickers;
-  const dupes = ALL.filter(s => (stk[s.id] || 0) > 1);
-
-  // Build flat list with unique keys
-  const flatList = [];
-  dupes.forEach(s => {
-    const extra = stk[s.id] - 1;
-    for (let i = 0; i < extra; i++) flatList.push({...s, uid: s.id + '_' + i});
-  });
-
   const giveCount = liveGive.size;
-  const getCount = liveGet.length;
+  const getCount = liveGet.size;
   const balanced = giveCount > 0 && giveCount === getCount;
 
   let html = '';
-  html += `<div class="trade-detail-back" onclick="closeLiveTrade()">← Voltar aos repetidos</div>`;
+  html += `<div class="trade-detail-back" onclick="closeLiveTrade()">← Voltar</div>`;
 
-  // Counter bar
+  // Counter bar - sticky
   html += `<div style="position:sticky;top:0;z-index:10;background:var(--bg);padding:8px 14px;border-bottom:1px solid var(--border)">
     <div style="display:flex;justify-content:center;align-items:center;gap:20px;font-family:'Oswald',sans-serif">
       <div style="text-align:center">
@@ -949,74 +961,92 @@ function renderLiveTrade() {
         <div style="font-size:24px;color:var(--green);font-weight:700">${getCount}</div>
       </div>
     </div>
+    ${balanced ? `<button class="trade-proposal-btn" style="margin-top:8px" onclick="confirmLiveTrade()">✓ Confirmar troca</button>` : ''}
   </div>`;
 
-  // Input to add received stickers
-  html += `<div style="padding:10px 14px;display:flex;gap:8px">
-    <input class="search-input" id="live-get-input" placeholder="Código do cromo (ex: BRA13)" style="flex:1" onkeydown="if(event.key==='Enter')addLiveGet()">
-    <button style="padding:8px 14px;background:var(--green);color:#000;border:none;border-radius:var(--radius);font-family:'Oswald',sans-serif;font-weight:700;font-size:13px" onclick="addLiveGet()">+ Recebo</button>
+  // Two tabs
+  html += `<div class="trade-tabs" style="margin-top:10px">
+    <button class="trade-tab-btn ${liveTradeTab==='give'?'active':''}" onclick="liveTradeTab='give';renderTab()">🔴 Ele quer (${giveCount})</button>
+    <button class="trade-tab-btn ${liveTradeTab==='get'?'active':''}" onclick="liveTradeTab='get';renderTab()">🟢 Eu quero (${getCount})</button>
   </div>`;
 
-  // Show received stickers
-  if (liveGet.length > 0) {
-    html += `<div class="trade-panel" style="margin:0 14px 10px">
-      <div class="trade-panel-title get">🟢 Eu recebo (${liveGet.length})</div>
-      <div class="trade-row">${liveGet.map((id, i) => {
-        const s = ALL.find(a => a.id.toUpperCase() === id.toUpperCase());
-        const name = s ? s.name : '';
-        return `<span class="trade-chip get selected" onclick="removeLiveGet(${i})" style="cursor:pointer">${id}${name ? ' — '+esc(name) : ''} ✕</span>`;
-      }).join('')}</div>
-    </div>`;
+  if (liveTradeTab === 'give') {
+    const dupes = ALL.filter(s => (stk[s.id] || 0) > 1);
+    if (dupes.length === 0) {
+      html += '<div class="empty-state"><div class="icon">📭</div><p>Sem repetidos para dar.</p></div>';
+    } else {
+      html += `<div style="padding:4px 14px;font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1px">Toca nos cromos que ele quer</div>`;
+      let lastTeam = '';
+      dupes.forEach(s => {
+        if (s.team !== lastTeam) {
+          const team = TEAM_LIST.find(t => t.code === s.team) || {name: s.team, flag: ''};
+          html += `<div class="page-header" style="margin-top:4px"><span class="page-title">${team.flag} ${esc(team.name)}</span></div>`;
+          lastTeam = s.team;
+        }
+        const extra = stk[s.id] - 1;
+        const sel = liveGive.has(s.id);
+        html += `<div class="sticker-row" onclick="toggleLiveGive('${s.id}')" style="cursor:pointer;${sel ? 'background:rgba(220,50,50,.15);border-left:3px solid var(--red)' : ''}">
+          <span style="width:22px;text-align:center;font-size:14px">${sel ? '✓' : '○'}</span>
+          <span class="sticker-id ${s.foil ? 'foil' : 'normal'}">${s.id}</span>
+          <span class="sticker-name owned" style="flex:1">${esc(s.name)}</span>
+          <span style="font-size:11px;color:var(--orange);font-weight:600">×${extra}</span>
+        </div>`;
+      });
+    }
+  } else {
+    const missing = ALL.filter(s => !stk[s.id]);
+    html += `<div style="padding:4px 14px;font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1px">Toca nos cromos que ele tem e tu queres</div>`;
+    let lastTeam = '';
+    missing.forEach(s => {
+      if (s.team !== lastTeam) {
+        const team = TEAM_LIST.find(t => t.code === s.team) || {name: s.team, flag: ''};
+        html += `<div class="page-header" style="margin-top:4px"><span class="page-title">${team.flag} ${esc(team.name)}</span></div>`;
+        lastTeam = s.team;
+      }
+      const sel = liveGet.has(s.id);
+      html += `<div class="sticker-row" onclick="toggleLiveGet('${s.id}')" style="cursor:pointer;${sel ? 'background:rgba(52,211,153,.15);border-left:3px solid var(--green)' : ''}">
+        <span style="width:22px;text-align:center;font-size:14px">${sel ? '✓' : '○'}</span>
+        <span class="sticker-id ${s.foil ? 'foil' : 'normal'}">${s.id}</span>
+        <span class="sticker-name" style="flex:1">${esc(s.name)}</span>
+      </div>`;
+    });
   }
 
-  // My dupes - selectable
-  html += `<div class="trade-panel" style="margin:0 14px 10px">
-    <div class="trade-panel-title give">🔴 Eu dou — toca para selecionar</div>
-  </div>`;
-
-  let lastTeam = '';
-  flatList.forEach(item => {
-    if (item.team !== lastTeam) {
-      const team = TEAM_LIST.find(t => t.code === item.team) || {name: item.team, flag: ''};
-      html += `<div class="page-header" style="margin-top:4px"><span class="page-title">${team.flag} ${esc(team.name)}</span></div>`;
-      lastTeam = item.team;
-    }
-    const sel = liveGive.has(item.uid);
-    html += `<div class="sticker-row" onclick="toggleLiveGive('${item.uid}')" style="cursor:pointer;${sel ? 'background:rgba(220,50,50,.15);border-left:3px solid var(--red)' : ''}">
-      <span style="width:22px;text-align:center;font-size:14px">${sel ? '✓' : '○'}</span>
-      <span class="sticker-id ${item.foil ? 'foil' : 'normal'}">${item.id}</span>
-      <span class="sticker-name owned" style="flex:1">${esc(item.name)}</span>
-    </div>`;
-  });
-
   container.innerHTML = html;
-  container.scrollTop = 0;
 }
 
-function toggleLiveGive(uid) {
-  if (liveGive.has(uid)) liveGive.delete(uid);
-  else liveGive.add(uid);
-  renderLiveTrade();
+function toggleLiveGive(id) {
+  if (liveGive.has(id)) liveGive.delete(id);
+  else liveGive.add(id);
+  renderTab();
 }
 
-function addLiveGet() {
-  const input = document.getElementById('live-get-input');
-  if (!input) return;
-  const val = input.value.trim().toUpperCase();
-  if (!val) return;
-  // Accept comma/space separated
-  const codes = val.split(/[\s,;]+/).filter(c => c);
-  codes.forEach(code => {
-    if (code) liveGet.push(code);
-  });
-  input.value = '';
-  renderLiveTrade();
-  setTimeout(() => document.getElementById('live-get-input')?.focus(), 50);
+function toggleLiveGet(id) {
+  if (liveGet.has(id)) liveGet.delete(id);
+  else liveGet.add(id);
+  renderTab();
 }
 
-function removeLiveGet(idx) {
-  liveGet.splice(idx, 1);
-  renderLiveTrade();
+async function confirmLiveTrade() {
+  if (liveGive.size !== liveGet.size || liveGive.size === 0) return;
+  const stk = collections[currentColl].stickers;
+  const colId = collections[currentColl].id;
+  // Remove one from each dupe I gave
+  for (const id of liveGive) {
+    stk[id] = (stk[id] || 0) - 1;
+    if (stk[id] <= 0) delete stk[id];
+    queueSave(colId, id, stk[id] || 0);
+  }
+  // Add each sticker I received
+  for (const id of liveGet) {
+    stk[id] = (stk[id] || 0) + 1;
+    queueSave(colId, id, stk[id]);
+  }
+  liveTradeActive = false;
+  liveGive = new Set();
+  liveGet = new Set();
+  updateStats();
+  renderTab();
 }
 
 // ── SEARCH ───────────────────────────────────────────────────────────────────
