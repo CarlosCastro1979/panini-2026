@@ -761,12 +761,12 @@ function switchTab(tab) {
   if (tab !== 'teams' || !document.getElementById('screen-team').classList.contains('active')) {
     showScreen('screen-app');
   }
-  renderTab();
+  renderTab(true);
 }
 
-function renderTab() {
+function renderTab(resetScroll) {
   const content = document.getElementById('app-content');
-  content.scrollTop = 0;
+  if (resetScroll) content.scrollTop = 0;
   switch (currentTab) {
     case 'teams': renderTeams(content); break;
     case 'missing': renderMissing(content); break;
@@ -1369,10 +1369,16 @@ function adjustQty(id, delta) {
 
 function refreshCurrentView() {
   updateStats();
+  const scrollEl = document.getElementById('app-content');
+  const scrollPos = scrollEl ? scrollEl.scrollTop : 0;
   if (document.getElementById('screen-team').classList.contains('active') && currentTeamCode) {
+    const teamScroll = document.getElementById('team-stickers');
+    const tPos = teamScroll ? teamScroll.scrollTop : 0;
     openTeam(currentTeamCode);
+    if (teamScroll) requestAnimationFrame(() => teamScroll.scrollTop = tPos);
   } else {
     renderTab();
+    if (scrollEl) requestAnimationFrame(() => scrollEl.scrollTop = scrollPos);
   }
 }
 
