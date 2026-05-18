@@ -874,30 +874,149 @@ function renderDupes(container) {
     container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Sem cromos repetidos.</p></div>';
     return;
   }
-  const totalExtra = dupes.reduce((s, d) => s + stk[d.id] - 1, 0);
-  let html = `<div class="page-header"><span class="page-title">🔄 Repetidos para trocar</span><span class="page-count">${totalExtra} cromos</span></div>`;
+  // Build flat list: each extra copy is one line
+  const flatList = [];
+  dupes.forEach(s => {
+    const extra = stk[s.id] - 1;
+    for (let i = 0; i < extra; i++) flatList.push(s);
+  });
+
+  let html = `<div class="page-header"><span class="page-title">🔄 Repetidos na mão</span><span class="page-count">${flatList.length} cromos</span></div>`;
+  html += `<div style="padding:0 14px 10px"><button class="trade-proposal-btn" onclick="openLiveTrade()">🤝 Trocar presencialmente</button></div>`;
 
   let lastTeam = '';
-  dupes.forEach(s => {
+  flatList.forEach(s => {
     if (s.team !== lastTeam) {
       const team = TEAM_LIST.find(t => t.code === s.team) || {name: s.team, flag: ''};
-      const teamExtra = dupes.filter(x => x.team === s.team).reduce((sum, d) => sum + stk[d.id] - 1, 0);
-      html += `<div class="page-header" style="margin-top:8px"><span class="page-title">${team.flag} ${esc(team.name)}</span><span class="page-count">${teamExtra} para trocar</span></div>`;
+      const teamCount = flatList.filter(x => x.team === s.team).length;
+      html += `<div class="page-header" style="margin-top:8px"><span class="page-title">${team.flag} ${esc(team.name)}</span><span class="page-count">${teamCount}</span></div>`;
       lastTeam = s.team;
     }
-    const extra = stk[s.id] - 1;
     html += `<div class="sticker-row">
       <span class="sticker-id ${s.foil ? 'foil' : 'normal'}">${s.id}</span>
       <span class="sticker-name owned" style="flex:1">${esc(s.name)}</span>
-      ${extra > 1 ? `<span style="font-size:11px;color:var(--red);font-weight:700">×${extra}</span>` : ''}
-      <div class="qty-controls">
-        <button class="qty-btn minus" onclick="event.stopPropagation();adjustQty('${s.id}',-1)">−</button>
-        <span class="qty-num dupe">${stk[s.id]}</span>
-        <button class="qty-btn plus" onclick="event.stopPropagation();adjustQty('${s.id}',1)">+</button>
-      </div>
     </div>`;
   });
   container.innerHTML = html;
+}
+
+// ── LIVE TRADE (presencial) ──────────────────────────────────────────────────
+let liveTradeActive = false;
+let liveGive = new Set(); // sticker IDs I'm giving
+let liveGet = [];  // sticker IDs I'm receiving (typed in)
+
+function openLiveTrade() {
+  liveTradeActive = true;
+  liveGive = new Set();
+  liveGet = [];
+  renderLiveTrade();
+}
+
+function closeLiveTrade() {
+  liveTradeActive = false;
+  renderTab();
+}
+
+function renderLiveTrade() {
+  const container = document.getElementById('app-content');
+  const stk = collections[currentColl].stickers;
+  const dupes = ALL.filter(s => (stk[s.id] || 0) > 1);
+
+  // Build flat list with unique keys
+  const flatList = [];
+  dupes.forEach(s => {
+    const extra = stk[s.id] - 1;
+    for (let i = 0; i < extra; i++) flatList.push({...s, uid: s.id + '_' + i});
+  });
+
+  const giveCount = liveGive.size;
+  const getCount = liveGet.length;
+  const balanced = giveCount > 0 && giveCount === getCount;
+
+  let html = '';
+  html += `<div class="trade-detail-back" onclick="closeLiveTrade()">← Voltar aos repetidos</div>`;
+
+  // Counter bar
+  html += `<div style="position:sticky;top:0;z-index:10;background:var(--bg);padding:8px 14px;border-bottom:1px solid var(--border)">
+    <div style="display:flex;justify-content:center;align-items:center;gap:20px;font-family:'Oswald',sans-serif">
+      <div style="text-align:center">
+        <div style="font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:1px">Eu dou</div>
+        <div style="font-size:24px;color:var(--red);font-weight:700">${giveCount}</div>
+      </div>
+      <div style="font-size:20px;color:${balanced ? 'var(--green)' : 'var(--text3)'}">${balanced ? '✓' : '↔'}</div>
+      <div style="text-align:center">
+        <div style="font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:1px">Eu recebo</div>
+        <div style="font-size:24px;color:var(--green);font-weight:700">${getCount}</div>
+      </div>
+    </div>
+  </div>`;
+
+  // Input to add received stickers
+  html += `<div style="padding:10px 14px;display:flex;gap:8px">
+    <input class="search-input" id="live-get-input" placeholder="Código do cromo (ex: BRA13)" style="flex:1" onkeydown="if(event.key==='Enter')addLiveGet()">
+    <button style="padding:8px 14px;background:var(--green);color:#000;border:none;border-radius:var(--radius);font-family:'Oswald',sans-serif;font-weight:700;font-size:13px" onclick="addLiveGet()">+ Recebo</button>
+  </div>`;
+
+  // Show received stickers
+  if (liveGet.length > 0) {
+    html += `<div class="trade-panel" style="margin:0 14px 10px">
+      <div class="trade-panel-title get">🟢 Eu recebo (${liveGet.length})</div>
+      <div class="trade-row">${liveGet.map((id, i) => {
+        const s = ALL.find(a => a.id.toUpperCase() === id.toUpperCase());
+        const name = s ? s.name : '';
+        return `<span class="trade-chip get selected" onclick="removeLiveGet(${i})" style="cursor:pointer">${id}${name ? ' — '+esc(name) : ''} ✕</span>`;
+      }).join('')}</div>
+    </div>`;
+  }
+
+  // My dupes - selectable
+  html += `<div class="trade-panel" style="margin:0 14px 10px">
+    <div class="trade-panel-title give">🔴 Eu dou — toca para selecionar</div>
+  </div>`;
+
+  let lastTeam = '';
+  flatList.forEach(item => {
+    if (item.team !== lastTeam) {
+      const team = TEAM_LIST.find(t => t.code === item.team) || {name: item.team, flag: ''};
+      html += `<div class="page-header" style="margin-top:4px"><span class="page-title">${team.flag} ${esc(team.name)}</span></div>`;
+      lastTeam = item.team;
+    }
+    const sel = liveGive.has(item.uid);
+    html += `<div class="sticker-row" onclick="toggleLiveGive('${item.uid}')" style="cursor:pointer;${sel ? 'background:rgba(220,50,50,.15);border-left:3px solid var(--red)' : ''}">
+      <span style="width:22px;text-align:center;font-size:14px">${sel ? '✓' : '○'}</span>
+      <span class="sticker-id ${item.foil ? 'foil' : 'normal'}">${item.id}</span>
+      <span class="sticker-name owned" style="flex:1">${esc(item.name)}</span>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+  container.scrollTop = 0;
+}
+
+function toggleLiveGive(uid) {
+  if (liveGive.has(uid)) liveGive.delete(uid);
+  else liveGive.add(uid);
+  renderLiveTrade();
+}
+
+function addLiveGet() {
+  const input = document.getElementById('live-get-input');
+  if (!input) return;
+  const val = input.value.trim().toUpperCase();
+  if (!val) return;
+  // Accept comma/space separated
+  const codes = val.split(/[\s,;]+/).filter(c => c);
+  codes.forEach(code => {
+    if (code) liveGet.push(code);
+  });
+  input.value = '';
+  renderLiveTrade();
+  setTimeout(() => document.getElementById('live-get-input')?.focus(), 50);
+}
+
+function removeLiveGet(idx) {
+  liveGet.splice(idx, 1);
+  renderLiveTrade();
 }
 
 // ── SEARCH ───────────────────────────────────────────────────────────────────
