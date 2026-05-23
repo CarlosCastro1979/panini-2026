@@ -366,7 +366,9 @@ async function sbFetch(path, opts = {}) {
     },
   });
   if (opts.method === 'DELETE') return null;
-  return res.json();
+  const text = await res.text();
+  if (!text) return null;
+  return JSON.parse(text);
 }
 
 const sb = {
