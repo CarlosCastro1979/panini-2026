@@ -407,10 +407,9 @@ const sb = {
     if (quantidade <= 0) {
       await sbFetch(`cromos?colecao_id=eq.${colecaoId}&cromo_id=eq.${cromoId}`, { method: 'DELETE' });
     } else {
-      await sbFetch('cromos', {
+      await sbFetch('cromos?on_conflict=colecao_id,cromo_id', {
         method: 'POST',
-        prefer: 'return=representation,resolution=merge-duplicates',
-        headers: { 'Prefer': 'return=representation,resolution=merge-duplicates' },
+        prefer: 'return=minimal,resolution=merge-duplicates',
         body: JSON.stringify({ colecao_id: colecaoId, cromo_id: cromoId, quantidade, atualizado_em: new Date().toISOString() }),
       });
     }
