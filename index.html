@@ -1274,7 +1274,59 @@ function renderTradePending(received, sent, history) {
 }
 
 async function respondTrade(tradeId, estado) {
-  try { await sb.updateTrocaEstado(tradeId, estado); } catch(e) { console.error(e); }
+  try {
+    await sb.updateTrocaEstado(tradeId, estado);
+
+    // If accepted, actually swap the stickers
+    if (estado === 'aceite') {
+      const trade = pendingTrades.find(t => t.id === tradeId);
+      if (trade) {
+        const myId = collections[currentColl].id;
+        const myStk = collections[currentColl].stickers;
+        
+        // Find the other collection
+        const otherId = trade.de_colecao_id === myId ? trade.para_colecao_id : trade.de_colecao_id;
+        const otherColl = collections.find(c => c.id === otherId);
+        
+        if (otherColl) {
+          const otherStk = otherColl.stickers;
+          
+          // "de" (proposer) gives cromos_dou, receives cromos_recebo
+          // "para" (receiver/me) gives cromos_recebo, receives cromos_dou
+          const iAmProposer = trade.de_colecao_id === myId;
+          const iGive = iAmProposer ? trade.cromos_dou : trade.cromos_recebo;
+          const iGet = iAmProposer ? trade.cromos_recebo : trade.cromos_dou;
+          const theyGive = iGet;
+          const theyGet = iGive;
+
+          // Remove one from what I give
+          for (const id of iGive) {
+            myStk[id] = (myStk[id] || 0) - 1;
+            if (myStk[id] <= 0) delete myStk[id];
+            queueSave(myId, id, myStk[id] || 0);
+          }
+          // Add what I receive
+          for (const id of iGet) {
+            myStk[id] = (myStk[id] || 0) + 1;
+            queueSave(myId, id, myStk[id]);
+          }
+          // Remove one from what they give
+          for (const id of theyGive) {
+            otherStk[id] = (otherStk[id] || 0) - 1;
+            if (otherStk[id] <= 0) delete otherStk[id];
+            queueSave(otherId, id, otherStk[id] || 0);
+          }
+          // Add what they receive
+          for (const id of theyGet) {
+            otherStk[id] = (otherStk[id] || 0) + 1;
+            queueSave(otherId, id, otherStk[id]);
+          }
+
+          updateStats();
+        }
+      }
+    }
+  } catch(e) { console.error(e); }
   await loadPendingTrades();
   renderTab();
 }
