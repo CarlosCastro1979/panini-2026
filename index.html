@@ -907,7 +907,12 @@ function renderMissing(container) {
     container.innerHTML = '<div class="empty-state"><div class="icon">🏆</div><p>Coleção completa! Parabéns!</p></div>';
     return;
   }
-  let html = '', lastTeam = '';
+  let html = `<div class="page-header"><span class="page-title">❌ Em falta</span><span class="page-count">${missing.length} cromos</span></div>`;
+  html += `<div style="padding:0 14px 10px;display:flex;gap:8px">
+    <button class="trade-proposal-btn" style="flex:1" onclick="shareMissing('list')">📋 Copiar lista</button>
+    <button class="trade-proposal-btn" style="flex:1" onclick="shareMissing('whatsapp')">📱 WhatsApp</button>
+  </div>`;
+  let lastTeam = '';
   missing.forEach(s => {
     if (s.team !== lastTeam) {
       const team = TEAM_LIST.find(t => t.code === s.team) || {name: s.team, flag: ''};
@@ -918,6 +923,42 @@ function renderMissing(container) {
     html += `<div class="sticker-row"><button class="sticker-check off" onclick="toggleSticker('${s.id}')"></button><span class="sticker-id ${s.foil ? 'foil' : 'normal'}">${s.id}${s.foil ? '<span class="foil-badge">FOIL</span>' : ''}</span><span class="sticker-name">${esc(s.name)}</span></div>`;
   });
   container.innerHTML = html;
+}
+
+function shareMissing(mode) {
+  const stk = collections[currentColl].stickers;
+  const nome = collections[currentColl].nome;
+  const missing = ALL.filter(s => !stk[s.id]);
+
+  let text = `⚽ Panini 2026 — ${nome}\n❌ Faltam ${missing.length} cromos\n\n`;
+  let lastTeam = '';
+  missing.forEach(s => {
+    if (s.team !== lastTeam) {
+      const team = TEAM_LIST.find(t => t.code === s.team) || {name: s.team, flag: ''};
+      const teamMissing = missing.filter(x => x.team === s.team);
+      text += `\n${team.flag} ${team.name} (${teamMissing.length})\n`;
+      lastTeam = s.team;
+    }
+    text += `${s.id} `;
+  });
+
+  if (mode === 'whatsapp') {
+    // Try native share first (works on mobile)
+    if (navigator.share) {
+      navigator.share({ text }).catch(() => {
+        window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+      });
+    } else {
+      window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+    }
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      const btns = document.querySelectorAll('.trade-proposal-btn');
+      if (btns[0]) { btns[0].textContent = '✅ Copiado!'; setTimeout(() => { btns[0].textContent = '📋 Copiar lista'; }, 2000); }
+    }).catch(() => {
+      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    });
+  }
 }
 
 // ── DUPES ────────────────────────────────────────────────────────────────────
@@ -931,7 +972,10 @@ function renderDupes(container) {
   }
   const totalExtra = dupes.reduce((s, d) => s + stk[d.id] - 1, 0);
   let html = `<div class="page-header"><span class="page-title">🔄 Repetidos na mão</span><span class="page-count">${totalExtra} cromos</span></div>`;
-  html += `<div style="padding:0 14px 10px"><button class="trade-proposal-btn" onclick="openLiveTrade()">🤝 Trocar presencialmente</button></div>`;
+  html += `<div style="padding:0 14px 10px;display:flex;gap:8px">
+    <button class="trade-proposal-btn" style="flex:1" onclick="openLiveTrade()">🤝 Trocar presencialmente</button>
+    <button class="trade-proposal-btn" style="flex:1" onclick="shareDupes()">📱 Partilhar</button>
+  </div>`;
 
   let lastTeam = '';
   dupes.forEach(s => {
@@ -1087,6 +1131,34 @@ async function confirmLiveTrade() {
   liveGet = new Set();
   updateStats();
   renderTab();
+}
+
+function shareDupes() {
+  const stk = collections[currentColl].stickers;
+  const nome = collections[currentColl].nome;
+  const dupes = ALL.filter(s => (stk[s.id] || 0) > 1);
+  const totalExtra = dupes.reduce((s, d) => s + stk[d.id] - 1, 0);
+
+  let text = `⚽ Panini 2026 — ${nome}\n🔄 ${totalExtra} cromos para trocar\n`;
+  let lastTeam = '';
+  dupes.forEach(s => {
+    if (s.team !== lastTeam) {
+      const team = TEAM_LIST.find(t => t.code === s.team) || {name: s.team, flag: ''};
+      const teamExtra = dupes.filter(x => x.team === s.team).reduce((sum, d) => sum + stk[d.id] - 1, 0);
+      text += `\n${team.flag} ${team.name} (${teamExtra})\n`;
+      lastTeam = s.team;
+    }
+    const extra = stk[s.id] - 1;
+    text += `${s.id}${extra > 1 ? ' ×' + extra : ''} `;
+  });
+
+  if (navigator.share) {
+    navigator.share({ text }).catch(() => {
+      window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+    });
+  } else {
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+  }
 }
 
 // ── SEARCH ───────────────────────────────────────────────────────────────────
